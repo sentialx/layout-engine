@@ -1,0 +1,238 @@
+﻿a {
+    color: #0000ff;
+    text-decoration: underline;
+}
+
+address {
+    display: block;
+    font-style: italic;
+}
+
+area {
+    display: none;
+}
+
+article {
+    display: block;
+}
+
+aside {
+    display: block;
+}
+
+b {
+    font-weight: bold;
+}
+
+bdo {
+    unicode-bidi: bidi-override;
+}
+
+blockquote {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+body {
+    display: block;
+    margin: 8px;
+}
+
+canvas {
+    height: 150px;
+    width: 300px;
+}
+
+caption {
+    display: table-caption;
+    text-align: center;
+}
+
+center {
+    text-align: center;
+}
+
+cite {
+    font-style: italic;
+}
+
+col {
+    display: table-column;
+}
+
+colgroup {
+    display: table-column-group;
+}
+
+datalist {
+    display: none;
+}
+
+dd {
+    display: block;
+    margin-left: 40px;
+}
+
+del {
+    text-decoration: line-through;
+}
+
+details {
+    display: block;
+}
+
+details {
+    display: block;
+}
+
+dfn {
+    font-style: italic;
+}
+
+div {
+    display: block;
+}
+
+dl {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+dt {
+    display: block;
+}
+
+em {
+    font-style: italic;
+}
+
+fieldset {
+    display: block;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+figcaption {
+    display: block;
+}
+
+figure {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+footer {
+    display: block;
+}
+
+form {
+    display: block;
+}
+
+frameset {
+    display: block;
+}
+
+frame {
+    display: block;
+}
+
+h1 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+h2 {
+    margin-top: 13px;
+    margin-bottom: 13px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+h3 {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+h4 {
+    margin-top: 21px;
+    margin-bottom: 21px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+h5 {
+    margin-top: 26px;
+    margin-bottom: 26px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+h6 {
+    margin-top: 37px;
+    margin-bottom: 37px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+head {
+    display: none;
+}
+
+header {
+    display: block;
+}
+
+hr {
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+html {
+    display: block;
+}
+
+i {
+    font-style: italic;
+}
+
+table {
+    display: table;
+    border: 1px solid #000;
+    margin-top: 16px;
+    margin-left: 16px;
+}
+
+
+tr {
+    display: table-row;
+}
+
+th {
+    display: table-cell;
+    font-weight: bold;
+    border: 1px solid #000;
+}
+
+td {
+    display: table-cell;
+    border: 1px solid #000;
+}

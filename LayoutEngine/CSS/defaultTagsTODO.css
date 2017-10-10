@@ -1,0 +1,54 @@
+﻿a:link, a:visited {
+    color: #000;
+    text-decoration: underline;
+    cursor: auto;
+}
+
+a:link:active, a:visited:active {
+    color: #000;
+}
+
+hr {
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+}
+
+html:focus {
+    outline: none;
+}
+
+audio {}
+
+big {
+    font-size: larger;
+}
+
+body:focus {
+    outline: none;
+}
+
+button {}
+
+code {
+    font-family: monospace;
+}
+
+dialog {}
+
+embed:focus {
+    outline: none;
+}
+
+fieldset {
+    border: 2px groove (internal value);
+}
+
+iframe:focus {
+    outline: none;
+}
+
+iframe[seamless] {
+    display: block;
+}

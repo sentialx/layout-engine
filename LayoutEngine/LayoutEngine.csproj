@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CSS\CSS.cs" />
+    <Content Include="CSS\defaultTagsTODO.css" />
     <Compile Include="Enums\CSS\BorderType.cs" />
     <Compile Include="Enums\CSS\Display.cs" />
     <Compile Include="Enums\CSS\FontStyle.cs" />
@@ -69,6 +70,10 @@
     <Compile Include="Structs\Size.cs" />
     <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="CSS\defaultTags.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

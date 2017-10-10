@@ -32,7 +32,7 @@ namespace LayoutEngine
             {
                 List<Rule> newInheritedStyles = new List<Rule>();
 
-                string css = System.IO.File.ReadAllText("defaultTags.css");
+                string css = System.IO.File.ReadAllText("CSS/defaultTags.css");
                 List<RuleSet> ruleSets = CSS.Parse(css);
 
                 string fontFamily = "Times New Roman";
