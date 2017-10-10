@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LayoutEngine
 {
     public class HTML
     {
-        public static string Minify (string[] html)
+        public static string Minify(string[] html)
         {
             string htmlMin = "";
 
@@ -16,12 +17,12 @@ namespace LayoutEngine
             return htmlMin;
         }
 
-        public static List<string> Beautify (string html)
+        public static List<string> Beautify(string html)
         {
             return Beautify(Parse(html).Children);
         }
 
-        private static List<string> Beautify (List<DOMElement> elements)
+        private static List<string> Beautify(List<DOMElement> elements)
         {
             List<string> lines = new List<string>();
 
@@ -64,7 +65,7 @@ namespace LayoutEngine
             return lines;
         }
 
-        public static HTMLDocument Parse (string html)
+        public static HTMLDocument Parse(string html)
         {
             // Remove new line characters from html string.
             html = html.Replace(System.Environment.NewLine, "").Trim();
@@ -86,7 +87,7 @@ namespace LayoutEngine
             return htmlDocument;
         }
 
-        private static Element ParseTag (int startingIndex, string html)
+        private static Element ParseTag(int startingIndex, string html)
         {
             // Initialize an Element.
             Element element = new Element()
@@ -131,12 +132,125 @@ namespace LayoutEngine
                 Type = tagType
             };
 
+            if (tagType == TagType.Opening)
+            {
+                htmlTag.attributes = ParseAttributes(tagCode);
+            }
+
             element.Tag = htmlTag;
 
             return element;
         }
 
-        private static Element ParseText (int startingIndex, string html)
+        private static List<HTMLTagAttribute> ParseAttributes(string tagCode)
+        {
+            List<HTMLTagAttribute> attributesList = new List<HTMLTagAttribute>();
+            // Get spaces indexes.
+            List<int> spaceIndexes = Utils.getIndexes(tagCode, " ");
+
+            int lastAttributeWithValueEndIndex = -1;
+
+            for (int i = 0; i < spaceIndexes.Count; i++)
+            {
+                int spaceIndex = spaceIndexes[i];
+
+                // If next sign isn't space.
+                if (tagCode[spaceIndex + 1].ToString() != " ")
+                {
+                    bool isEmptyAttribute = true;
+                    bool addAttribute = true;
+
+                    // Initialize an attribute.
+                    HTMLTagAttribute attribute = new HTMLTagAttribute();
+
+                    for (int n = spaceIndex + 1; n < tagCode.Length; n++)
+                    {
+                        string sign = tagCode[n].ToString();
+
+                        if (sign == " " || sign == "=" || sign == ">")
+                        {
+                            
+                            // Cut tag code to get the name.
+                            string name = tagCode.Substring(spaceIndex + 1, n - spaceIndex - 1);
+
+                            if (name.Length > 0)
+                            {
+                                isEmptyAttribute = false;
+                                attribute.name = name;
+                            }
+
+                            break;
+                        }
+                    }
+
+                    // Potential equal index.
+                    int equalIndex = spaceIndex + 1 + attribute.name.Length;
+                    attribute.startIndex = equalIndex + 1;
+
+                    if (spaceIndex < lastAttributeWithValueEndIndex)
+                    {
+                        addAttribute = false;
+                        isEmptyAttribute = true;
+                    }
+
+                    if (!isEmptyAttribute)
+                    {
+                        if (equalIndex < tagCode.Length)
+                        {
+                            string signAtPotentialEqualIndex = tagCode[equalIndex].ToString();
+
+                            if (equalIndex + 1 < tagCode.Length) {
+                                string nextSign = tagCode[equalIndex + 1].ToString();
+                                // Check if attribute has a value.
+                                if (signAtPotentialEqualIndex == "=" && nextSign != " " && nextSign != ">")
+                                {
+                                    // Attribute value is in quotation marks. 
+                                    bool isQuotationMark = (nextSign == "\"");
+
+                                    int valueStartIndex = equalIndex + 1;
+                                    if (isQuotationMark) valueStartIndex++;
+
+                                    for (int v = valueStartIndex; v < tagCode.Length; v++)
+                                    {
+                                        string sign = tagCode[v].ToString();
+
+                                        // Check if the value is closed.
+                                        bool condition = (sign == ">" || sign == @"""") || !isQuotationMark && sign == " ";
+
+                                        if (condition)
+                                        {
+                                            int startIndex = equalIndex + 1;
+                                            int endIndex = v - equalIndex - 1;
+
+                                            if (isQuotationMark)
+                                            {
+                                                startIndex++;
+                                                endIndex--;
+                                            }
+
+                                            // Cut tag code to get attribute the value.
+                                            attribute.endIndex = endIndex;
+                                            attribute.value = tagCode.Substring(startIndex, endIndex);
+
+                                            lastAttributeWithValueEndIndex = equalIndex + v - equalIndex + 1;
+
+                                            break;
+                                        }
+                                    }
+                                 }
+                            }                        
+                        }
+
+                        // Add attribute to attributes list.
+                        if (addAttribute) attributesList.Add(attribute);
+                    }
+                }
+            }
+
+            return attributesList;
+        }
+
+        private static Element ParseText(int startingIndex, string html)
         {
             // Initialize an Element.
             Element element = new Element()
@@ -183,7 +297,7 @@ namespace LayoutEngine
             return element;
         }
 
-        private static List<Element> GetElements (string html)
+        private static List<Element> GetElements(string html)
         {
             List<Element> elements = new List<Element>();
 
@@ -247,7 +361,7 @@ namespace LayoutEngine
             return elements;
         }
 
-        private static void SetLevels (List<Element> elements)
+        private static void SetLevels(List<Element> elements)
         {
             int currentLevel = 0;
 
@@ -297,7 +411,7 @@ namespace LayoutEngine
             }
         }
 
-        private static List<DOMElement> GetDOMTree (List<Element> elements)
+        private static List<DOMElement> GetDOMTree(List<Element> elements)
         {
             List<DOMElement> domElements = new List<DOMElement>();
             List<DOMElement> domTree = new List<DOMElement>();
