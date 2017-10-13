@@ -25,16 +25,13 @@ namespace LayoutEngine
             Console.ReadKey();
         }
 
-        private static void SetStyles(List<DOMElement> elements, List<Rule> inheritedStyles = null)
+        private static void SetStyles(List<DOMElement> elements, List<RuleSet> ruleSets, List<Rule> inheritedStyles = null)
         {
             if (inheritedStyles == null) inheritedStyles = new List<Rule>();
 
             foreach (DOMElement element in elements)
             {
                 List<Rule> newInheritedStyles = new List<Rule>();
-
-                string css = System.IO.File.ReadAllText("CSS/defaultTags.css");
-                List<RuleSet> ruleSets = CSS.Parse(css);
 
                 string fontFamily = "Times New Roman";
 
@@ -262,7 +259,7 @@ namespace LayoutEngine
                     newInheritedStyles.Add(rule);
                 }
 
-                if (element.Children.Count > 0) SetStyles(element.Children, newInheritedStyles);
+                if (element.Children.Count > 0) SetStyles(element.Children, ruleSets, newInheritedStyles);
             }
         }
 
@@ -488,7 +485,26 @@ namespace LayoutEngine
 
         private static void Reflow (List<DOMElement> elements)
         {
-            SetStyles(elements);
+            List<RuleSet> ruleSets = new List<RuleSet>();
+
+            if (System.IO.File.Exists("CSS/defaultStyles.css"))
+            {
+                string defaultStyles = System.IO.File.ReadAllText("CSS/defaultStyles.css");
+                ruleSets = CSS.Parse(defaultStyles);
+            }
+
+            if (System.IO.File.Exists("CSS/styles.css"))
+            {
+                string style = System.IO.File.ReadAllText("CSS/styles.css");
+                List<RuleSet> ruleSets2 = CSS.Parse(style);
+
+                foreach (RuleSet rs in ruleSets2)
+                {
+                    ruleSets.Add(rs);
+                }
+            }
+
+            SetStyles(elements, ruleSets);
 
             SetSizes(elements);
 

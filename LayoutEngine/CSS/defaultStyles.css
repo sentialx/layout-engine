@@ -216,11 +216,7 @@ i {
 
 table {
     display: table;
-    border: 1px solid #000;
-    margin-top: 16px;
-    margin-left: 16px;
 }
-
 
 tr {
     display: table-row;
@@ -229,10 +225,8 @@ tr {
 th {
     display: table-cell;
     font-weight: bold;
-    border: 1px solid #000;
 }
 
 td {
     display: table-cell;
-    border: 1px solid #000;
 }

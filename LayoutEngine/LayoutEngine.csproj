@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CSS\CSS.cs" />
-    <Content Include="CSS\defaultTagsTODO.css" />
+    <Content Include="CSS\defaultStylesTODO.css" />
     <Compile Include="Enums\CSS\BorderType.cs" />
     <Compile Include="Enums\CSS\Display.cs" />
     <Compile Include="Enums\CSS\FontStyle.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CSS\defaultTags.css">
+    <Content Include="CSS\defaultStyles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
