@@ -41,6 +41,10 @@ namespace LayoutEngine
                 {
                     cssProperty.Unit = Unit.Pt;
                 }
+                else if (unitType == "pc")
+                {
+                    cssProperty.Unit = Unit.Pc;
+                }
 
                 return cssProperty;
             }
@@ -69,6 +73,10 @@ namespace LayoutEngine
             else if (cssProperty.Unit == Unit.Pt)
             {
                 return CSSUnitsConverter.ptToPX(cssProperty.Value);
+            }
+            else if (cssProperty.Unit == Unit.Pc)
+            {
+                return CSSUnitsConverter.pcToPX(cssProperty.Value);
             }
 
             return -1;

@@ -7,6 +7,7 @@
         Cm, // Centimeters
         Mm, // Millimeters
         In, // Inches
-        Pt  // Points
+        Pt, // Points
+        Pc  // Picas
     }
 }

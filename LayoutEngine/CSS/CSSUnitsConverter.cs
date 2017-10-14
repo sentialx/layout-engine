@@ -23,7 +23,7 @@ namespace LayoutEngine
         /// </summary>
         public static float mmToPX (float val)
         {
-            return cmToPX(val / 10);
+            return cmToPX(val / 10f);
         }
 
         /// <summary>
@@ -39,7 +39,15 @@ namespace LayoutEngine
         /// </summary>
         public static float ptToPX (float val)
         {
-            return val * (Utils.getDPI() / 72);
+            return Utils.getDPI() / 72f * val;
+        }
+
+        /// <summary>
+        //  Calculates pixels from picas
+        /// </summary>
+        public static float pcToPX(float val)
+        {
+            return ptToPX(12f * val);
         }
 
         #endregion
