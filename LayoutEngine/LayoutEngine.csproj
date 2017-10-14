@@ -45,6 +45,7 @@
     <Content Include="CSS\defaultStylesTODO.css" />
     <Compile Include="CSS\CSSProperty.cs" />
     <Compile Include="CSS\CSSUnits.cs" />
+    <Compile Include="CSS\CSSUnitsConverter.cs" />
     <Compile Include="Enums\CSS\BorderType.cs" />
     <Compile Include="Enums\CSS\Display.cs" />
     <Compile Include="Enums\CSS\FontStyle.cs" />

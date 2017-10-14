@@ -231,11 +231,10 @@ td {
     display: table-cell;
 }
 
-
 test {
     margin-left: 512px;
     margin-top: 512px;
-    width: 2cm;
+    width: 10mm;
     height: 200px;
-    background-color: red;
+    background-color: yellow;
 }

@@ -2,7 +2,7 @@
 {
     class CSSProperty
     {
-        public double Value;
+        public float Value;
         public Unit Unit;
     }
 }

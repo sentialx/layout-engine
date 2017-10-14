@@ -4,6 +4,7 @@
     {
         none,
         px,
-        cm
+        cm,
+        mm
     }
 }
