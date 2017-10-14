@@ -410,11 +410,11 @@ namespace LayoutEngine
                 }
             }
 
+            SetSizesWithPaddings(element, childrenSizes);
+
             if (element.Parent != null) newChildrenSizes = GetChildrenSizes(element.Parent);
 
             if (element.Style.Display == Display.Table) SetTableSizes(element);
-
-            SetSizesWithPaddings(element, childrenSizes);
 
             if (element.Parent != null) SetSizes(element.Parent, newChildrenSizes);
         }
