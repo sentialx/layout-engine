@@ -11,6 +11,8 @@ namespace LayoutEngine
         public static CSSProperty parseCSSProperty(Rule rule, DOMElement element)
         {
             CSSProperty cssProperty = new CSSProperty();
+
+            cssProperty.Rule = rule.Property;
             cssProperty.Element = element;
 
             List<string> array = Regex.Split(rule.Value, @"[^0-9\.]+").Where(c => c != "." && c.Trim() != "").ToList<string>();
@@ -85,17 +87,29 @@ namespace LayoutEngine
             }
             else if (cssProperty.Unit == Unit.Procent)
             {
-                DOMElement element = cssProperty.Element;
-
-                if (element.Parent != null)
-                {
-                    float parentWidth = element.Parent.Style.Size.Width;
-
-                    return Utils.calculateProcent(parentWidth, 100f, 0f, cssProperty.Value);
-                }
+                return calculateDOMElementProcent(cssProperty);
             }
 
             return 0;
+        }
+
+        private static float calculateDOMElementProcent (CSSProperty cssProperty)
+        {
+            DOMElement element = cssProperty.Element;
+
+            if (cssProperty.Rule == "width") {
+                float parentWidth = (element.Parent != null) ? element.Parent.Style.Size.Width : Program.deviceWidth;
+
+                return Utils.calculateProcent(parentWidth, 100f, 0f, cssProperty.Value);
+            }
+            else if (cssProperty.Rule == "height")
+            {
+                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : Program.deviceHeight;
+
+                return Utils.calculateProcent(parentHeight, 100f, 0f, cssProperty.Value);
+            }
+
+            return 0f;
         }
     }
 }

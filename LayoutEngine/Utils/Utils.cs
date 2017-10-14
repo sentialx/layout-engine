@@ -26,7 +26,7 @@ namespace LayoutEngine
 
         public static int getDPI ()
         {
-            return 96; //GetDeviceCaps(GetDC(IntPtr.Zero), 88);
+            return GetDeviceCaps(GetDC(IntPtr.Zero), 88); // 96
         }
 
         /// <summary>

@@ -6,6 +6,8 @@ namespace LayoutEngine
 {
     class Program
     {
+        public static int deviceWidth = 1366;
+        public static int deviceHeight = 768;
         private static Bitmap bmp;
 
         static void Main(string[] args)
@@ -186,7 +188,14 @@ namespace LayoutEngine
                                 }
                                 else if (rule.Property == "height")
                                 {
-                                    element.Style.Size.Height = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    CSSProperty parsedProperty = CSSUnits.parseCSSProperty(rule, element);
+
+                                    if (parsedProperty != null)
+                                    {
+                                        float pixels = CSSUnits.convertAnyUnitToPixels(parsedProperty);
+
+                                        if (pixels >= 0) element.Style.Size.Height = pixels;
+                                    }
                                 }
                                 else if (rule.Property == "width")
                                 {
@@ -195,10 +204,7 @@ namespace LayoutEngine
                                     if (parsedProperty != null) {
                                         float pixels = CSSUnits.convertAnyUnitToPixels(parsedProperty);
                                         
-                                        if (pixels >= 0)
-                                        {
-                                            element.Style.Size.Width = pixels;
-                                        }
+                                        if (pixels >= 0) element.Style.Size.Width = pixels;
                                     }
                                 }
                                 else if (rule.Property == "background-color")
@@ -558,7 +564,7 @@ namespace LayoutEngine
 
             List<DOMElement> elements = document.Children;
 
-            bmp = new Bitmap(1366, 768);
+            bmp = new Bitmap(deviceWidth, deviceHeight);
 
             using (Graphics graphics = Graphics.FromImage(bmp))
             {

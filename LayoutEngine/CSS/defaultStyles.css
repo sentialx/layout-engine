@@ -232,15 +232,19 @@ td {
 }
 
 a {
-    margin-left: 256px;
-    margin-top: 256px;
-    width: 256px;
-    height: 256px;
+    width: 25%;
+    height: 50%;
     background-color: lime;
 }
 
 b {
-    width: 25%;
-    height: 128px;
+    width: 50%;
+    height: 50%;
     background-color: black;
+}
+
+c {
+    width: 50%;
+    height: 50%;
+    background-color: yellow;
 }
