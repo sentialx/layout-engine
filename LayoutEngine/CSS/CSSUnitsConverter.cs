@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace LayoutEngine
 {
@@ -11,7 +12,8 @@ namespace LayoutEngine
         /// </summary>
         public static float cmToPX(float val)
         {
-            float pxPerCM = 37.795276f;
+            int dpi = Utils.getDPI();
+            float pxPerCM = dpi / 2.54f; // Get pixels per centimeter
 
             return pxPerCM * val + (0.1f * val * pxPerCM);
         }
@@ -22,6 +24,14 @@ namespace LayoutEngine
         public static float mmToPX (float val)
         {
             return cmToPX(val / 10);
+        }
+
+        /// <summary>
+        //  Calculates pixels from inches
+        /// </summary>
+        public static float inToPX (float val)
+        {
+            return val * Utils.getDPI();
         }
 
         #endregion

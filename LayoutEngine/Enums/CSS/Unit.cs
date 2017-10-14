@@ -2,9 +2,10 @@
 {
     public enum Unit
     {
-        none,
-        px,
-        cm,
-        mm
+        None,
+        Px, // Pixels
+        Cm, // Centimeters
+        Mm, // Millimeters
+        In // Inches
     }
 }

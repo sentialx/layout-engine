@@ -18,20 +18,24 @@ namespace LayoutEngine
                 float value = float.Parse(array[0], CultureInfo.InvariantCulture.NumberFormat);
                 int startIndex = value.ToString().Length;
 
-                string unitType = rule.Value.Substring(startIndex, rule.Value.Length - startIndex);
+                string unitType = rule.Value.Substring(startIndex, rule.Value.Length - startIndex).ToLower();
                 cssProperty.Value = value;
 
                 if (unitType == "px")
                 {
-                    cssProperty.Unit = Unit.px;
+                    cssProperty.Unit = Unit.Px;
                 }
                 else if (unitType == "cm")
                 {
-                    cssProperty.Unit = Unit.cm;
+                    cssProperty.Unit = Unit.Cm;
                 }
                 else if (unitType == "mm")
                 {
-                    cssProperty.Unit = Unit.mm;
+                    cssProperty.Unit = Unit.Mm;
+                }
+                else if (unitType == "in")
+                {
+                    cssProperty.Unit = Unit.In;
                 }
 
                 return cssProperty;
@@ -42,17 +46,21 @@ namespace LayoutEngine
  
         public static float convertAnyUnitToPixels(CSSProperty cssProperty)
         {
-            if (cssProperty.Unit == Unit.px)
+            if (cssProperty.Unit == Unit.Px)
             {
                 return cssProperty.Value;
             }
-            else if (cssProperty.Unit == Unit.cm)
+            else if (cssProperty.Unit == Unit.Cm)
             {
                 return CSSUnitsConverter.cmToPX(cssProperty.Value);
             }
-            else if (cssProperty.Unit == Unit.mm)
+            else if (cssProperty.Unit == Unit.Mm)
             {
                 return CSSUnitsConverter.mmToPX(cssProperty.Value);
+            }
+            else if (cssProperty.Unit == Unit.In)
+            {
+                return CSSUnitsConverter.inToPX(cssProperty.Value);
             }
 
             return -1;
