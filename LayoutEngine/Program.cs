@@ -8,6 +8,7 @@ namespace LayoutEngine
     {
         public static int deviceWidth = 1366;
         public static int deviceHeight = 768;
+
         private static Bitmap bmp;
 
         static void Main(string[] args)
@@ -51,7 +52,7 @@ namespace LayoutEngine
                 // For example if a div is in b and the b is in i,
                 // the div's text will be bold and italic.
 
-                foreach (Rule rule in inheritedStylesCopy)
+                foreach (Rule rule in inheritedStyles)
                 {
                     if (rule.Property == "font-weight")
                     {
@@ -88,14 +89,14 @@ namespace LayoutEngine
                         float paddingTop = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
                         element.ComputedStyle.Padding.Top = paddingTop;
 
-                        inheritedStyles.Remove(rule);
+                        inheritedStylesCopy.Remove(rule);
                     }
                     else if (rule.Property == "padding-left")
                     {
                         float paddingLeft = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
                         element.ComputedStyle.Padding.Left = paddingLeft;
 
-                        inheritedStyles.Remove(rule);
+                        inheritedStylesCopy.Remove(rule);
                     }
                 }
                 
@@ -109,6 +110,8 @@ namespace LayoutEngine
                         // Check if the selector in the rule set is matching current element's selector.
                         if (ruleSet.Selector == selector)
                         {
+                            element.RuleSet = ruleSet;
+
                             foreach (Rule rule in ruleSet.Rules)
                             {
                                 if (rule.Property == "font-weight")
@@ -188,24 +191,15 @@ namespace LayoutEngine
                                 }
                                 else if (rule.Property == "height")
                                 {
-                                    CSSProperty parsedProperty = CSSUnits.parseCSSProperty(rule, element);
+                                    CSSValue parsedValue = CSSUnits.ParseValue(rule, element);
 
-                                    if (parsedProperty != null)
-                                    {
-                                        float pixels = CSSUnits.convertAnyUnitToPixels(parsedProperty);
-
-                                        if (pixels >= 0) element.Style.Size.Height = pixels;
-                                    }
+                                    element.Style.Size.Height = parsedValue.Value;
                                 }
                                 else if (rule.Property == "width")
                                 {
-                                    CSSProperty parsedProperty = CSSUnits.parseCSSProperty(rule, element);
+                                    CSSValue parsedValue = CSSUnits.ParseValue(rule, element);
 
-                                    if (parsedProperty != null) {
-                                        float pixels = CSSUnits.convertAnyUnitToPixels(parsedProperty);
-                                        
-                                        if (pixels >= 0) element.Style.Size.Width = pixels;
-                                    }
+                                    element.Style.Size.Width = parsedValue.Value;
                                 }
                                 else if (rule.Property == "background-color")
                                 {
@@ -269,7 +263,7 @@ namespace LayoutEngine
                 element.Style.Font = font;
 
                 // Pass used styles by the current element and its parents, to its children.
-                foreach (Rule rule in inheritedStyles)
+                foreach (Rule rule in inheritedStylesCopy)
                 {
                     newInheritedStyles.Add(rule);
                 }
@@ -425,7 +419,7 @@ namespace LayoutEngine
             if (element.Parent != null) SetSizes(element.Parent, newChildrenSizes);
         }
 
-        private static void SetSizes(List<DOMElement> elements)
+        private static void SetSizes (List<DOMElement> elements)
         {
             foreach (DOMElement element in elements)
             {
@@ -440,7 +434,31 @@ namespace LayoutEngine
             }
         }
 
-        private static void SetPositions(List<DOMElement> elements)
+        private static void SetPercentSizes (List<DOMElement> elements)
+        {
+            foreach (DOMElement element in elements)
+            {
+                if (element.RuleSet.Rules != null)
+                {
+                    foreach (Rule rule in element.RuleSet.Rules)
+                    {
+                        if (rule.ComputedValue != null && rule.ComputedValue.Unit == Unit.Percent)
+                        {
+                            if (rule.Property == "width")
+                            {
+                                float width = CSSUnits.PercentToPx(rule, element);
+
+                                element.ComputedStyle.Size.Width = width;
+                            }
+                        }
+                    }
+                }
+
+                if (element.Children.Count > 0) SetPercentSizes(element.Children);
+            }
+        }
+
+        private static void SetPositions (List<DOMElement> elements)
         {
             foreach (DOMElement element in elements)
             {
@@ -522,6 +540,8 @@ namespace LayoutEngine
             SetStyles(elements, ruleSets);
 
             SetSizes(elements);
+
+            SetPercentSizes(elements);
 
             SetPositions(elements);
         }

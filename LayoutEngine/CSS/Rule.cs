@@ -9,5 +9,6 @@ namespace LayoutEngine
     {
         public string Property;
         public string Value;
+        public CSSValue ComputedValue;
     }
 }

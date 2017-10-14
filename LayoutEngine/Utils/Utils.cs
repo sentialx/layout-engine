@@ -11,7 +11,7 @@ namespace LayoutEngine
         [DllImport("user32.dll")]
         static extern IntPtr GetDC(IntPtr hWnd);
 
-        public static List<int> getIndexes(string parent, string str)
+        public static List<int> GetIndexes(string parent, string str)
         {
             List<int> indexes = new List<int>();
             int i = -1;
@@ -24,15 +24,12 @@ namespace LayoutEngine
             return indexes;
         }
 
-        public static int getDPI ()
+        public static int GetDPI ()
         {
             return GetDeviceCaps(GetDC(IntPtr.Zero), 88); // 96
         }
 
-        /// <summary>
-        /// Calculates procent.
-        /// </summary>
-        public static float calculateProcent (float firstNumber, float firstProcent, float secondNumber, float secondProcent)
+        public static float CalculatePercent (float firstNumber, float firstProcent, float secondNumber, float secondProcent)
         {
             if (firstNumber == 0) return secondNumber * firstProcent / secondProcent;
             else if (firstProcent == 0) return firstNumber * secondProcent / secondNumber;

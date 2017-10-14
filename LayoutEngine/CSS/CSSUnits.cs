@@ -6,16 +6,13 @@ using System.Text.RegularExpressions;
 
 namespace LayoutEngine
 {
-    class CSSUnits
+    public class CSSUnits
     {
-        public static CSSProperty parseCSSProperty(Rule rule, DOMElement element)
+        public static CSSValue ParseValue (Rule rule, DOMElement element)
         {
-            CSSProperty cssProperty = new CSSProperty();
+            CSSValue cssValue = new CSSValue();
 
-            cssProperty.Rule = rule.Property;
-            cssProperty.Element = element;
-
-            List<string> array = Regex.Split(rule.Value, @"[^0-9\.]+").Where(c => c != "." && c.Trim() != "").ToList<string>();
+            List<string> array = Regex.Split(rule.Value, @"[^0-9\.]+").Where(c => c != "." && c.Trim() != "").ToList();
 
             if (array.Count > 0 && rule.Value.Length > 2)
             {
@@ -23,90 +20,79 @@ namespace LayoutEngine
                 int startIndex = value.ToString().Length;
 
                 string unitType = rule.Value.Substring(startIndex, rule.Value.Length - startIndex).ToLower();
-                cssProperty.Value = value;
+                cssValue.Value = value;
 
-                if (unitType == "px")
-                {
-                    cssProperty.Unit = Unit.Px;
-                }
-                else if (unitType == "cm")
-                {
-                    cssProperty.Unit = Unit.Cm;
-                }
-                else if (unitType == "mm")
-                {
-                    cssProperty.Unit = Unit.Mm;
-                }
-                else if (unitType == "in")
-                {
-                    cssProperty.Unit = Unit.In;
-                }
-                else if (unitType == "pt")
-                {
-                    cssProperty.Unit = Unit.Pt;
-                }
-                else if (unitType == "pc")
-                {
-                    cssProperty.Unit = Unit.Pc;
-                } else if (unitType == "%")
-                {
-                    cssProperty.Unit = Unit.Procent;
-                }
+                if (unitType == "px") cssValue.Unit = Unit.Px;
+                else if (unitType == "cm") cssValue.Unit = Unit.Cm;
+                else if (unitType == "mm") cssValue.Unit = Unit.Mm;
+                else if (unitType == "in") cssValue.Unit = Unit.In;
+                else if (unitType == "pt") cssValue.Unit = Unit.Pt;
+                else if (unitType == "pc") cssValue.Unit = Unit.Pc;
+                else if (unitType == "%") cssValue.Unit = Unit.Percent;
 
-                return cssProperty;
+                rule.ComputedValue = cssValue;
+
+                cssValue.Value = ConvertAnyUnitToPixels(rule, element);
+                cssValue.ValueBeforeComputing = value;
+
+                return cssValue;
             }
 
             return null;
         }
- 
-        public static float convertAnyUnitToPixels(CSSProperty cssProperty)
+
+        private static float ConvertAnyUnitToPixels (Rule rule, DOMElement element)
         {
-            if (cssProperty.Unit == Unit.Px)
+            CSSValue cssValue = rule.ComputedValue;
+
+            if (cssValue.Unit == Unit.Px)
             {
-                return cssProperty.Value;
+                return cssValue.Value;
             }
-            else if (cssProperty.Unit == Unit.Cm)
+            else if (cssValue.Unit == Unit.Cm)
             {
-                return CSSUnitsConverter.cmToPX(cssProperty.Value);
+                return CSSUnitsConverter.CmToPX(cssValue.Value);
             }
-            else if (cssProperty.Unit == Unit.Mm)
+            else if (cssValue.Unit == Unit.Mm)
             {
-                return CSSUnitsConverter.mmToPX(cssProperty.Value);
+                return CSSUnitsConverter.CmToPX(cssValue.Value);
             }
-            else if (cssProperty.Unit == Unit.In)
+            else if (cssValue.Unit == Unit.In)
             {
-                return CSSUnitsConverter.inToPX(cssProperty.Value);
+                return CSSUnitsConverter.InToPX(cssValue.Value);
             }
-            else if (cssProperty.Unit == Unit.Pt)
+            else if (cssValue.Unit == Unit.Pt)
             {
-                return CSSUnitsConverter.ptToPX(cssProperty.Value);
+                return CSSUnitsConverter.PtToPX(cssValue.Value);
             }
-            else if (cssProperty.Unit == Unit.Pc)
+            else if (cssValue.Unit == Unit.Pc)
             {
-                return CSSUnitsConverter.pcToPX(cssProperty.Value);
+                return CSSUnitsConverter.PcToPX(cssValue.Value);
             }
-            else if (cssProperty.Unit == Unit.Procent)
+            else if (cssValue.Unit == Unit.Percent)
             {
-                return calculateDOMElementProcent(cssProperty);
+                return PercentToPx(rule, element);
             }
 
             return 0;
         }
 
-        private static float calculateDOMElementProcent (CSSProperty cssProperty)
+        public static float PercentToPx (Rule rule, DOMElement element)
         {
-            DOMElement element = cssProperty.Element;
+            if (rule.Property == "width") {
+                float parentWidth = (element.Parent != null) ? element.Parent.ComputedStyle.Size.Width : Program.deviceWidth;
 
-            if (cssProperty.Rule == "width") {
-                float parentWidth = (element.Parent != null) ? element.Parent.Style.Size.Width : Program.deviceWidth;
+                float width = (rule.ComputedValue.ValueBeforeComputing / 100) * parentWidth;
 
-                return Utils.calculateProcent(parentWidth, 100f, 0f, cssProperty.Value);
+                return width;
             }
-            else if (cssProperty.Rule == "height")
+            else if (rule.Property == "height")
             {
-                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : Program.deviceHeight;
+                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : 0;
 
-                return Utils.calculateProcent(parentHeight, 100f, 0f, cssProperty.Value);
+                float height = (rule.ComputedValue.ValueBeforeComputing / 100) * parentHeight;
+
+                return height;
             }
 
             return 0f;

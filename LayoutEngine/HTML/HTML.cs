@@ -146,7 +146,7 @@ namespace LayoutEngine
         {
             List<HTMLTagAttribute> attributesList = new List<HTMLTagAttribute>();
             // Get spaces indexes.
-            List<int> spaceIndexes = Utils.getIndexes(tagCode, " ");
+            List<int> spaceIndexes = Utils.GetIndexes(tagCode, " ");
 
             int lastAttributeWithValueEndIndex = -1;
 

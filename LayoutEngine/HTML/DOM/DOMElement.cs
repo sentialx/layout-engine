@@ -12,5 +12,6 @@ namespace LayoutEngine
         public DOMElementType Type;
         public Style Style = new Style();
         public ComputedStyle ComputedStyle = new ComputedStyle();
+        public RuleSet RuleSet = new RuleSet();
     }
 }

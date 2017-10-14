@@ -1,10 +1,9 @@
 ﻿namespace LayoutEngine
 {
-    class CSSProperty
+    public class CSSValue
     {
-        public string Rule;
         public float Value;
+        public float ValueBeforeComputing;
         public Unit Unit;
-        public DOMElement Element;
     }
 }

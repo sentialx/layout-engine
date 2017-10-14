@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LayoutEngine
 {
     public class CSS
     {
-        public static List<RuleSet> Parse(string css)
+        public static List<RuleSet> Parse (string css)
         {
             bool isInBrackets = false;
             bool readingSelector = false;

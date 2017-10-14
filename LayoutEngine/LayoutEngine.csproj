@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="CSS\CSS.cs" />
     <Content Include="CSS\defaultStylesTODO.css" />
-    <Compile Include="CSS\CSSProperty.cs" />
+    <Compile Include="CSS\CSSValue.cs" />
     <Compile Include="CSS\CSSUnits.cs" />
     <Compile Include="CSS\CSSUnitsConverter.cs" />
     <Compile Include="Enums\CSS\BorderType.cs" />

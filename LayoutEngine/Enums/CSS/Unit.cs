@@ -3,7 +3,7 @@
     public enum Unit
     {
         None,
-        Procent, // Procent
+        Percent, // Percent
         Px,      // Pixels
         Cm,      // Centimeters
         Mm,      // Millimeters
