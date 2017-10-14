@@ -15,7 +15,7 @@ namespace LayoutEngine
             int dpi = Utils.getDPI();
             float pxPerCM = dpi / 2.54f; // Get pixels per centimeter
 
-            return pxPerCM * val + (0.1f * val * pxPerCM);
+            return pxPerCM * val;
         }
 
         /// <summary>
@@ -32,6 +32,14 @@ namespace LayoutEngine
         public static float inToPX (float val)
         {
             return val * Utils.getDPI();
+        }
+
+        /// <summary>
+        //  Calculates pixels from points
+        /// </summary>
+        public static float ptToPX (float val)
+        {
+            return val * (Utils.getDPI() / 72);
         }
 
         #endregion

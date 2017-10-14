@@ -6,6 +6,7 @@
         Px, // Pixels
         Cm, // Centimeters
         Mm, // Millimeters
-        In // Inches
+        In, // Inches
+        Pt  // Points
     }
 }

@@ -37,6 +37,10 @@ namespace LayoutEngine
                 {
                     cssProperty.Unit = Unit.In;
                 }
+                else if (unitType == "pt")
+                {
+                    cssProperty.Unit = Unit.Pt;
+                }
 
                 return cssProperty;
             }
@@ -61,6 +65,10 @@ namespace LayoutEngine
             else if (cssProperty.Unit == Unit.In)
             {
                 return CSSUnitsConverter.inToPX(cssProperty.Value);
+            }
+            else if (cssProperty.Unit == Unit.Pt)
+            {
+                return CSSUnitsConverter.ptToPX(cssProperty.Value);
             }
 
             return -1;
