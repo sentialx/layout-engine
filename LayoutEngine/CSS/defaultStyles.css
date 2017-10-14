@@ -231,10 +231,16 @@ td {
     display: table-cell;
 }
 
-test {
-    margin-left: 512px;
-    margin-top: 512px;
-    width: 1pc;
-    height: 200px;
+a {
+    margin-left: 256px;
+    margin-top: 256px;
+    width: 256px;
+    height: 256px;
     background-color: lime;
+}
+
+b {
+    width: 25%;
+    height: 128px;
+    background-color: black;
 }

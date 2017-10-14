@@ -190,11 +190,11 @@ namespace LayoutEngine
                                 }
                                 else if (rule.Property == "width")
                                 {
-                                    CSSProperty parsedProperty = CSSUnits.parseCSSProperty(rule);
+                                    CSSProperty parsedProperty = CSSUnits.parseCSSProperty(rule, element);
 
                                     if (parsedProperty != null) {
                                         float pixels = CSSUnits.convertAnyUnitToPixels(parsedProperty);
-
+                                        
                                         if (pixels >= 0)
                                         {
                                             element.Style.Size.Width = pixels;

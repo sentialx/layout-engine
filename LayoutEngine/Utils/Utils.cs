@@ -28,5 +28,18 @@ namespace LayoutEngine
         {
             return 96; //GetDeviceCaps(GetDC(IntPtr.Zero), 88);
         }
+
+        /// <summary>
+        /// Calculates procent.
+        /// </summary>
+        public static float calculateProcent (float firstNumber, float firstProcent, float secondNumber, float secondProcent)
+        {
+            if (firstNumber == 0) return secondNumber * firstProcent / secondProcent;
+            else if (firstProcent == 0) return firstNumber * secondProcent / secondNumber;
+            else if (secondNumber == 0) return firstNumber * secondProcent / firstProcent;
+            else if (secondProcent == 0) return secondNumber * firstProcent / firstNumber;
+
+            return 0;
+        }
     }
 }

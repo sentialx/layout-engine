@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -7,9 +8,10 @@ namespace LayoutEngine
 {
     class CSSUnits
     {
-        public static CSSProperty parseCSSProperty(Rule rule)
+        public static CSSProperty parseCSSProperty(Rule rule, DOMElement element)
         {
             CSSProperty cssProperty = new CSSProperty();
+            cssProperty.Element = element;
 
             List<string> array = Regex.Split(rule.Value, @"[^0-9\.]+").Where(c => c != "." && c.Trim() != "").ToList<string>();
 
@@ -44,6 +46,9 @@ namespace LayoutEngine
                 else if (unitType == "pc")
                 {
                     cssProperty.Unit = Unit.Pc;
+                } else if (unitType == "%")
+                {
+                    cssProperty.Unit = Unit.Procent;
                 }
 
                 return cssProperty;
@@ -78,8 +83,19 @@ namespace LayoutEngine
             {
                 return CSSUnitsConverter.pcToPX(cssProperty.Value);
             }
+            else if (cssProperty.Unit == Unit.Procent)
+            {
+                DOMElement element = cssProperty.Element;
 
-            return -1;
+                if (element.Parent != null)
+                {
+                    float parentWidth = element.Parent.Style.Size.Width;
+
+                    return Utils.calculateProcent(parentWidth, 100f, 0f, cssProperty.Value);
+                }
+            }
+
+            return 0;
         }
     }
 }

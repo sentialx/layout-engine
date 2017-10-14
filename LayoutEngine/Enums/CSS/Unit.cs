@@ -3,11 +3,12 @@
     public enum Unit
     {
         None,
-        Px, // Pixels
-        Cm, // Centimeters
-        Mm, // Millimeters
-        In, // Inches
-        Pt, // Points
-        Pc  // Picas
+        Procent, // Procent
+        Px,      // Pixels
+        Cm,      // Centimeters
+        Mm,      // Millimeters
+        In,      // Inches
+        Pt,      // Points
+        Pc       // Picas
     }
 }
