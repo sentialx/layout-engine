@@ -43,11 +43,14 @@
   <ItemGroup>
     <Compile Include="CSS\CSS.cs" />
     <Content Include="CSS\defaultStylesTODO.css" />
+    <Compile Include="CSS\CSSProperty.cs" />
+    <Compile Include="CSS\CSSUnits.cs" />
     <Compile Include="Enums\CSS\BorderType.cs" />
     <Compile Include="Enums\CSS\Display.cs" />
     <Compile Include="Enums\CSS\FontStyle.cs" />
     <Compile Include="Enums\CSS\FontWeight.cs" />
     <Compile Include="Enums\CSS\TextDecoration.cs" />
+    <Compile Include="Enums\CSS\Unit.cs" />
     <Compile Include="Enums\HTML\DOMElementType.cs" />
     <Compile Include="Enums\HTML\ElementType.cs" />
     <Compile Include="Enums\HTML\TagType.cs" />

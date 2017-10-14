@@ -190,7 +190,13 @@ namespace LayoutEngine
                                 }
                                 else if (rule.Property == "width")
                                 {
-                                    element.Style.Size.Width = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    CSSProperty parsedProperty = Utils.parseCSSProperty(rule);
+
+                                    if (parsedProperty != null) { 
+                                        Console.WriteLine(parsedProperty.Value);
+                                        Console.WriteLine(parsedProperty.Unit);
+                                        element.Style.Size.Width = float.Parse(rule.Value.Split(new string[] { "cm" }, StringSplitOptions.None)[0]);
+                                    }
                                 }
                                 else if (rule.Property == "background-color")
                                 {
