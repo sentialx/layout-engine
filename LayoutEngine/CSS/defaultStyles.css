@@ -231,20 +231,13 @@ td {
     display: table-cell;
 }
 
-a {
-    width: 25%;
-    height: 50%;
+testa {
+    width: 250px;
+    height: 250px;
     background-color: lime;
+    font-size: 30px;
 }
 
-b {
-    width: 50%;
-    height: 50%;
-    background-color: black;
-}
-
-c {
-    width: 50%;
-    height: 50%;
-    background-color: yellow;
+testb {
+    font-size: 2em;
 }

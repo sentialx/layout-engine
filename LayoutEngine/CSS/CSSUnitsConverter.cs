@@ -1,12 +1,7 @@
-﻿using System;
-using System.Drawing;
-
-namespace LayoutEngine
+﻿namespace LayoutEngine
 {
     public class CSSUnitsConverter
     {
-
-        #region Absolute Lengths
 
         /// <summary>
         //  Calculates pixels from centimeters
@@ -14,7 +9,7 @@ namespace LayoutEngine
         public static float CmToPX(float val)
         {
             int dpi = Utils.GetDPI();
-            float pxPerCM = dpi / 2.54f; // Get pixels per centimeter
+            float pxPerCM = dpi / 2.54f;
 
             return pxPerCM * val;
         }
@@ -22,7 +17,7 @@ namespace LayoutEngine
         /// <summary>
         //  Calculates pixels from millimeters
         /// </summary>
-        public static float MmToPX (float val)
+        public static float MmToPX(float val)
         {
             return CmToPX(val / 10f);
         }
@@ -30,7 +25,7 @@ namespace LayoutEngine
         /// <summary>
         //  Calculates pixels from inches
         /// </summary>
-        public static float InToPX (float val)
+        public static float InToPX(float val)
         {
             return val * Utils.GetDPI();
         }
@@ -38,7 +33,7 @@ namespace LayoutEngine
         /// <summary>
         //  Calculates pixels from points
         /// </summary>
-        public static float PtToPX (float val)
+        public static float PtToPX(float val)
         {
             return Utils.GetDPI() / 72f * val;
         }
@@ -50,7 +45,5 @@ namespace LayoutEngine
         {
             return PtToPX(12f * val);
         }
-
-        #endregion
     }
 }

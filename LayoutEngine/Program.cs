@@ -64,10 +64,6 @@ namespace LayoutEngine
                         if (rule.Value == "italic") fontStyles.Add(FontStyle.Italic);
                         else if (rule.Value == "normal") fontStyles.Add(FontStyle.Normal);
                     }
-                    else if (rule.Property == "font-size")
-                    {
-                        fontSize = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
-                    }
                     else if (rule.Property == "font-family")
                     {
                         fontFamily = rule.Value;
@@ -95,6 +91,14 @@ namespace LayoutEngine
                     {
                         float paddingLeft = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
                         element.ComputedStyle.Padding.Left = paddingLeft;
+
+                        inheritedStylesCopy.Remove(rule);
+                    }
+                    else if (rule.Property == "font-size")
+                    {
+                        CSSValue parsedValue = CSSUnits.ParseValue(rule, element);
+
+                        fontSize = parsedValue.Value;
 
                         inheritedStylesCopy.Remove(rule);
                     }
@@ -130,8 +134,6 @@ namespace LayoutEngine
                                 }
                                 else if (rule.Property == "font-size")
                                 {
-                                    fontSize = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
-
                                     newInheritedStyles.Add(rule);
                                 }
                                 else if (rule.Property == "font-family")
@@ -242,6 +244,7 @@ namespace LayoutEngine
                 }
 
                 // Apply all the font styles added before.
+                Console.WriteLine(fontSize);
                 Font font = new Font(new FontFamily(fontFamily), fontSize, System.Drawing.FontStyle.Regular, GraphicsUnit.Pixel);
 
                 foreach (FontStyle fontStyle in fontStyles)

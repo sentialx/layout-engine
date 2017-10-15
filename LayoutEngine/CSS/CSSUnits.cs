@@ -29,6 +29,7 @@ namespace LayoutEngine
                 else if (unitType == "pt") cssValue.Unit = Unit.Pt;
                 else if (unitType == "pc") cssValue.Unit = Unit.Pc;
                 else if (unitType == "%") cssValue.Unit = Unit.Percent;
+                else if (unitType == "em") cssValue.Unit = Unit.Em;
 
                 rule.ComputedValue = cssValue;
 
@@ -73,6 +74,10 @@ namespace LayoutEngine
             {
                 return PercentToPx(rule, element);
             }
+            else if (cssValue.Unit == Unit.Em)
+            {
+                return EmToPx(rule, element);
+            }
 
             return 0;
         }
@@ -96,6 +101,13 @@ namespace LayoutEngine
             }
 
             return 0f;
+        }
+
+        public static float EmToPx(Rule rule, DOMElement element)
+        {
+            float parentFontSize = (element.Parent != null) ? element.Parent.Style.Font.Size : 14; // 14 - Document font-size
+
+            return parentFontSize * rule.ComputedValue.Value;
         }
     }
 }
