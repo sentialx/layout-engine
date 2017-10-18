@@ -10,6 +10,7 @@
         Mm,      // Millimeters
         In,      // Inches
         Pt,      // Points
-        Pc       // Picas
+        Pc,      // Picas
+        CalcFunc // Calc function
     }
 }

@@ -244,7 +244,6 @@ namespace LayoutEngine
                 }
 
                 // Apply all the font styles added before.
-                Console.WriteLine(fontSize);
                 Font font = new Font(new FontFamily(fontFamily), fontSize, System.Drawing.FontStyle.Regular, GraphicsUnit.Pixel);
 
                 foreach (FontStyle fontStyle in fontStyles)
@@ -445,13 +444,34 @@ namespace LayoutEngine
                 {
                     foreach (Rule rule in element.RuleSet.Rules)
                     {
-                        if (rule.ComputedValue != null && rule.ComputedValue.Unit == Unit.Percent)
+                        /*if (rule.ComputedValue != null && rule.ComputedValue.Unit == Unit.Percent)
                         {
                             if (rule.Property == "width")
                             {
                                 float width = CSSUnits.PercentToPx(rule, element);
 
                                 element.ComputedStyle.Size.Width = width;
+                            }
+                        }*/
+                        if (rule.ComputedValue != null)
+                        {
+                            float value = -1f;
+
+                            if (rule.ComputedValue.Unit == Unit.Percent)
+                            {
+                                value = CSSUnits.PercentToPx(rule, element);
+                            }
+                            else if (rule.ComputedValue.Unit == Unit.CalcFunc)
+                            {
+                                value = CSSUnits.CalcFunction(rule, element);
+                            }
+
+                            if (value != -1f)
+                            {
+                                if (rule.Property == "width")
+                                {
+                                    element.ComputedStyle.Size.Width = value;
+                                }
                             }
                         }
                     }

@@ -232,12 +232,13 @@ td {
 }
 
 testa {
-    width: 250px;
-    height: 250px;
+    width: 256px;
+    height: 256px;
     background-color: lime;
-    font-size: 30px;
 }
 
 testb {
-    font-size: 2em;
+    width: calc(80%);
+    height: 128px;
+    background-color: black;
 }
