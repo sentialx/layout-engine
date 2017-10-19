@@ -73,6 +73,10 @@ namespace LayoutEngine
             {
                 return CSSUnitsConverter.InToPX(cssValue.Value);
             }
+            else if (cssValue.Unit == Unit.Percent)
+            {
+                return PercentToPx(rule, element);
+            }
             else if (cssValue.Unit == Unit.Pt)
             {
                 return CSSUnitsConverter.PtToPX(cssValue.Value);
@@ -116,6 +120,7 @@ namespace LayoutEngine
         public static float CalcFunction (Rule rule, DOMElement element)
         {
             string value = rule.Value.Split(new[] { "calc(" }, StringSplitOptions.None)[1];
+            value = value.ToLower();
 
             if (value[value.Length - 1] != ')')
             {
@@ -125,61 +130,94 @@ namespace LayoutEngine
                 value = value.Substring(0, value.Length - 1);
             }
 
-            try
+            string computedPercentValue = CalcFunctionCompute(rule, element, value, Unit.Percent);
+
+            if (computedPercentValue == null)
             {
-                // Convert all percentes to pixels
-                while (true)
-                {
-                    int percentIndex = value.IndexOf("%");
-                    if (percentIndex == -1) break;
-
-                    int startIndex = getStartIndex(value, percentIndex);
-
-                    // Get and parse value before computing
-                    string val = value.Substring(startIndex, percentIndex - startIndex);
-                    float valueBeforeComputing = float.Parse(val, CultureInfo.InvariantCulture.NumberFormat);
-
-                    // Convert percent to pixels
-                    rule.ComputedValue.ValueBeforeComputing = valueBeforeComputing;
-                    float computedValueFromPercent = PercentToPx(rule, element);
-
-                    // Replace percent value with computed value (pixels)
-                    int length = val.Length + 1;
-
-                    StringBuilder stringBuilder = new StringBuilder(value);
-                    stringBuilder.Remove(startIndex, length);
-                    stringBuilder.Insert(startIndex, computedValueFromPercent.ToString().Replace(',', '.'));
-                    value = stringBuilder.ToString();
-                }
-                
-                // Calculate
-                DataTable dt = new DataTable();
-                float computedValue = float.Parse(dt.Compute(value, "").ToString().Replace(',', '.'), CultureInfo.InvariantCulture.NumberFormat);
-
-                return computedValue;
-            } catch (Exception exception)
+                Console.WriteLine("Calc function isn't correct!");
+            } else
             {
-                Console.WriteLine(exception.Message);
-                return -1f;
+                Console.WriteLine(computedPercentValue);
             }
+
+            return 2f;
         }
 
-        private static int getStartIndex (string str, int index)
+        private static string CalcFunctionCompute (Rule rule, DOMElement element, string calcString, Unit unitType)
+        {
+            while (true)
+            {
+                string unit = GetUnitAbbreviation(unitType);
+
+                int unitStartIndex = calcString.IndexOf(unit);
+                if (unitStartIndex == -1) break;
+                int unitEndIndex = unitStartIndex + unit.Length;
+
+                // Get starting value index
+                int valueStartIndex = CalcFunctionGetStartIndex(calcString, unitStartIndex);
+
+                if (valueStartIndex == unitStartIndex)
+                {
+                    return null;
+                }
+
+                // Get and parse value
+                string value = calcString.Substring(valueStartIndex, unitStartIndex - valueStartIndex);
+                float parsedValue = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+
+                // Compute the value
+                rule.ComputedValue.Unit = unitType;
+                rule.ComputedValue.ValueBeforeComputing = parsedValue;
+                rule.ComputedValue.Value = parsedValue;
+
+                float computedValue = ConvertAnyUnitToPixels(rule, element);
+
+                // Replace string with computed value
+                StringBuilder stringBuilder = new StringBuilder(calcString);
+                stringBuilder.Remove(valueStartIndex, unitStartIndex - valueStartIndex + unit.Length);
+                stringBuilder.Insert(valueStartIndex, computedValue.ToString().Replace(',', '.'));
+
+                calcString = stringBuilder.ToString();
+            }
+
+            Console.WriteLine("---------------------------");
+            return calcString;
+        }
+
+        private static int CalcFunctionGetStartIndex (string str, int index)
         {
             int startIndex = -1;
 
             for (int i = index - 1; i >= 0; i--)
             {
                 char sign = str[i];
+                bool isArithmeticSign = (sign == '+' || sign == '-' || sign == '*' || sign == '/');
+                bool isSpace = (sign == ' ');
 
-                if (i == 0 || sign == ' ' || sign == '+' || sign == '-' || sign == '*' || sign == '/')
+                if (i == 0 || isSpace || isArithmeticSign)
                 {
+                    if (isArithmeticSign || isSpace) i++;
+
                     startIndex = i;
                     break;
                 }
             }
 
             return startIndex;
+        }
+
+        public static string GetUnitAbbreviation (Unit unit)
+        {
+            if (unit == Unit.Px) return "px";
+            else if (unit == Unit.Cm) return "cm";
+            else if (unit == Unit.Mm) return "mm";
+            else if (unit == Unit.In) return "in";
+            else if (unit == Unit.Pt) return "pt";
+            else if (unit == Unit.Pc) return "pc";
+            else if (unit == Unit.Percent) return "%";
+            else if (unit == Unit.Em) return "em";
+
+            return null;
         }
     }
 }

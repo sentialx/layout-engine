@@ -238,7 +238,7 @@ testa {
 }
 
 testb {
-    width: calc(80%);
+    width: calc(10% - 20%);
     height: 128px;
     background-color: black;
 }
