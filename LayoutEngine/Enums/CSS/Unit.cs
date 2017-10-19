@@ -11,6 +11,8 @@
         In,      // Inches
         Pt,      // Points
         Pc,      // Picas
+        Deg,     // Degrees
+        Grad,    // Gradians
         CalcFunc // Calc function
     }
 }
