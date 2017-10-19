@@ -13,6 +13,7 @@
         Pc,      // Picas
         Deg,     // Degrees
         Grad,    // Gradians
+        Rad,     // Radians
         CalcFunc // Calc function
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace LayoutEngine
+﻿using System;
+
+namespace LayoutEngine
 {
     public class CSSUnitsConverter
     {
@@ -52,6 +54,14 @@
         public static float GradToDeg (float val)
         {
             return val * 360 / 400;
+        }
+
+        /// <summary>
+        //  Calculates degrees from radians
+        /// </summary>
+        public static float RadToDeg(float val)
+        {
+            return 360f * val / (float)(Math.PI * 2f);
         }
     }
 }
