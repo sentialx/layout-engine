@@ -63,5 +63,13 @@ namespace LayoutEngine
         {
             return 360f * val / (float)(Math.PI * 2f);
         }
+
+        /// <summary>
+        //  Calculates degrees from turns
+        /// </summary>
+        public static float TurnToDeg(float val)
+        {
+            return val * 360f;
+        }
     }
 }

@@ -14,6 +14,7 @@
         Deg,     // Degrees
         Grad,    // Gradians
         Rad,     // Radians
+        Turn,    // Turns
         CalcFunc // Calc function
     }
 }
