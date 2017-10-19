@@ -67,7 +67,7 @@ namespace LayoutEngine
             }
             else if (cssValue.Unit == Unit.Mm)
             {
-                return CSSUnitsConverter.CmToPX(cssValue.Value);
+                return CSSUnitsConverter.MmToPX(cssValue.Value);
             }
             else if (cssValue.Unit == Unit.In)
             {
@@ -119,31 +119,53 @@ namespace LayoutEngine
 
         public static float CalcFunction (Rule rule, DOMElement element)
         {
-            string value = rule.Value.Split(new[] { "calc(" }, StringSplitOptions.None)[1];
-            value = value.ToLower();
+            try
+            {
+                // Cut unnecessary parts
+                string value = rule.Value.Split(new[] { "calc(" }, StringSplitOptions.None)[1];
+                value = value.ToLower();
 
-            if (value[value.Length - 1] != ')')
+                if (value[value.Length - 1] != ')') return -1f;
+                else value = value.Substring(0, value.Length - 1);
+
+                if (value.Length < 2) return -1f;
+
+                // Cut pixel unit
+                value = CalcFunctionCompute(rule, element, value, Unit.Px, false);
+
+                Unit[] units = new Unit[] {
+                    Unit.Cm,
+                    Unit.Em,
+                    Unit.In,
+                    Unit.Mm,
+                    Unit.Pc,
+                    Unit.Percent,
+                    Unit.Pt
+                };
+
+                foreach (Unit unit in units) value = CalcFunctionCompute(rule, element, value, unit);
+
+                if (value == null)
+                {
+                    Console.WriteLine("Calc function ins't correct!");
+
+                    return -1f;
+                }
+                else
+                {
+                    float computedValue = float.Parse(new DataTable().Compute(value, "").ToString().Replace(',', '.'), CultureInfo.InvariantCulture.NumberFormat);
+
+                    return computedValue;
+                }
+            } catch (Exception exception)
             {
-               return -1f; 
-            } else
-            {
-                value = value.Substring(0, value.Length - 1);
+                Console.WriteLine(exception.Message);
+
+                return -1f;
             }
-
-            string computedPercentValue = CalcFunctionCompute(rule, element, value, Unit.Percent);
-
-            if (computedPercentValue == null)
-            {
-                Console.WriteLine("Calc function isn't correct!");
-            } else
-            {
-                Console.WriteLine(computedPercentValue);
-            }
-
-            return 2f;
         }
 
-        private static string CalcFunctionCompute (Rule rule, DOMElement element, string calcString, Unit unitType)
+        private static string CalcFunctionCompute (Rule rule, DOMElement element, string calcString, Unit unitType, bool convert = true)
         {
             while (true)
             {
@@ -156,21 +178,21 @@ namespace LayoutEngine
                 // Get starting value index
                 int valueStartIndex = CalcFunctionGetStartIndex(calcString, unitStartIndex);
 
-                if (valueStartIndex == unitStartIndex)
-                {
-                    return null;
-                }
+                if (valueStartIndex == unitStartIndex) return null;
 
                 // Get and parse value
                 string value = calcString.Substring(valueStartIndex, unitStartIndex - valueStartIndex);
                 float parsedValue = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
 
                 // Compute the value
-                rule.ComputedValue.Unit = unitType;
-                rule.ComputedValue.ValueBeforeComputing = parsedValue;
-                rule.ComputedValue.Value = parsedValue;
+                if (convert)
+                {
+                    rule.ComputedValue.Unit = unitType;
+                    rule.ComputedValue.ValueBeforeComputing = parsedValue;
+                    rule.ComputedValue.Value = parsedValue;
+                }
 
-                float computedValue = ConvertAnyUnitToPixels(rule, element);
+                float computedValue = (convert) ? ConvertAnyUnitToPixels(rule, element) : parsedValue;
 
                 // Replace string with computed value
                 StringBuilder stringBuilder = new StringBuilder(calcString);
@@ -180,7 +202,6 @@ namespace LayoutEngine
                 calcString = stringBuilder.ToString();
             }
 
-            Console.WriteLine("---------------------------");
             return calcString;
         }
 
