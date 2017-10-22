@@ -2,9 +2,12 @@
 {
     public class HTMLTagAttribute
     {
-        public string name = "";
-        public string value = "";
-        public int startIndex = -1;
-        public int endIndex = -1;
+        public string Property = "";
+        public string Value = "";
+        public int PropertyStartIndex = -1;
+        public int PropertyEndIndex = -1;
+        public int ValueStartIndex = -1;
+        public int ValueEndIndex = -1;
+        public bool HasValue = false;
     }
 }

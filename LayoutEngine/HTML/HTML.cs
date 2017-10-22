@@ -142,114 +142,6 @@ namespace LayoutEngine
             return element;
         }
 
-        private static List<HTMLTagAttribute> ParseAttributes(string tagCode)
-        {
-            List<HTMLTagAttribute> attributesList = new List<HTMLTagAttribute>();
-            // Get spaces indexes.
-            List<int> spaceIndexes = Utils.GetIndexes(tagCode, " ");
-
-            int lastAttributeWithValueEndIndex = -1;
-
-            for (int i = 0; i < spaceIndexes.Count; i++)
-            {
-                int spaceIndex = spaceIndexes[i];
-
-                // If next sign isn't space.
-                if (tagCode[spaceIndex + 1].ToString() != " ")
-                {
-                    bool isEmptyAttribute = true;
-                    bool addAttribute = true;
-
-                    // Initialize an attribute.
-                    HTMLTagAttribute attribute = new HTMLTagAttribute();
-
-                    for (int n = spaceIndex + 1; n < tagCode.Length; n++)
-                    {
-                        string sign = tagCode[n].ToString();
-
-                        if (sign == " " || sign == "=" || sign == ">")
-                        {
-                            
-                            // Cut tag code to get the name.
-                            string name = tagCode.Substring(spaceIndex + 1, n - spaceIndex - 1);
-
-                            if (name.Length > 0)
-                            {
-                                isEmptyAttribute = false;
-                                attribute.name = name;
-                            }
-
-                            break;
-                        }
-                    }
-
-                    // Potential equal index.
-                    int equalIndex = spaceIndex + 1 + attribute.name.Length;
-                    attribute.startIndex = equalIndex + 1;
-
-                    if (spaceIndex < lastAttributeWithValueEndIndex)
-                    {
-                        addAttribute = false;
-                        isEmptyAttribute = true;
-                    }
-
-                    if (!isEmptyAttribute)
-                    {
-                        if (equalIndex < tagCode.Length)
-                        {
-                            string signAtPotentialEqualIndex = tagCode[equalIndex].ToString();
-
-                            if (equalIndex + 1 < tagCode.Length) {
-                                string nextSign = tagCode[equalIndex + 1].ToString();
-                                // Check if attribute has a value.
-                                if (signAtPotentialEqualIndex == "=" && nextSign != " " && nextSign != ">")
-                                {
-                                    // Attribute value is in quotation marks. 
-                                    bool isQuotationMark = (nextSign == "\"");
-
-                                    int valueStartIndex = equalIndex + 1;
-                                    if (isQuotationMark) valueStartIndex++;
-
-                                    for (int v = valueStartIndex; v < tagCode.Length; v++)
-                                    {
-                                        string sign = tagCode[v].ToString();
-
-                                        // Check if the value is closed.
-                                        bool condition = (sign == ">" || sign == @"""") || !isQuotationMark && sign == " ";
-
-                                        if (condition)
-                                        {
-                                            int startIndex = equalIndex + 1;
-                                            int endIndex = v - equalIndex - 1;
-
-                                            if (isQuotationMark)
-                                            {
-                                                startIndex++;
-                                                endIndex--;
-                                            }
-
-                                            // Cut tag code to get attribute the value.
-                                            attribute.endIndex = endIndex;
-                                            attribute.value = tagCode.Substring(startIndex, endIndex);
-
-                                            lastAttributeWithValueEndIndex = equalIndex + v - equalIndex + 1;
-
-                                            break;
-                                        }
-                                    }
-                                 }
-                            }                        
-                        }
-
-                        // Add attribute to attributes list.
-                        if (addAttribute) attributesList.Add(attribute);
-                    }
-                }
-            }
-
-            return attributesList;
-        }
-
         private static Element ParseText(int startingIndex, string html)
         {
             // Initialize an Element.
@@ -484,6 +376,128 @@ namespace LayoutEngine
             }
 
             return domTree;
+        }
+
+        private static List<HTMLTagAttribute> ParseAttributes(string tagCode)
+        {
+            List<HTMLTagAttribute> attributesList = new List<HTMLTagAttribute>();
+            List<int> spaceIndexes = Utils.GetIndexes(tagCode, " ");
+
+            foreach (int spaceIndex in spaceIndexes)
+            {
+                char nextSign = tagCode[spaceIndex + 1];
+
+                if (nextSign != ' ' && nextSign != '>')
+                {
+                    HTMLTagAttribute attribute = ParseAttribute(tagCode, spaceIndex + 1);
+
+                    if (attribute == null)
+                    {
+                        return null;
+                    }
+
+                    attributesList.Add(attribute);
+                }
+            }
+
+            HTMLTagAttribute lastAttribute = new HTMLTagAttribute();
+
+            for (int i = 0; i < attributesList.Count; i++)
+            {
+                HTMLTagAttribute attribute = attributesList[i];
+
+                if (i > 0)
+                {
+                    if (lastAttribute.ValueEndIndex + 1 > attribute.PropertyStartIndex || attribute.Property.Length < 1)
+                    {
+                        attributesList.Remove(attributesList[i]);
+                    }
+                }
+
+                if (attribute.HasValue)
+                {
+                    lastAttribute = attribute;
+                }
+            }
+
+            /*
+            Console.WriteLine("---------");
+
+            foreach (HTMLTagAttribute attribute in attributesList)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Property: " + attribute.Property);
+                Console.WriteLine("Value: " + attribute.Value);
+            }
+            */
+
+            return attributesList;
+        }
+
+        private static HTMLTagAttribute ParseAttribute(string code, int startIndex)
+        {
+            HTMLTagAttribute attribute = new HTMLTagAttribute();
+
+            attribute.PropertyStartIndex = startIndex;
+
+            for (int i = startIndex; i < code.Length; i++)
+            {
+                char sign = code[i];
+
+                if (sign == '=')
+                {
+                    attribute.PropertyEndIndex = i;
+                    attribute.HasValue = true;
+
+                    attribute.Property = code.Substring(attribute.PropertyStartIndex, attribute.PropertyEndIndex - attribute.PropertyStartIndex).ToLower();
+
+                    break;
+                }
+            }
+
+            if (attribute.HasValue)
+            {
+                char sign = code[attribute.PropertyEndIndex + 1];
+
+                if (sign != '"')
+                {
+                    attribute.ValueStartIndex = attribute.PropertyEndIndex + 1;
+
+                    for (int i = attribute.PropertyEndIndex + 1; i < code.Length; i++)
+                    {
+                        char _sign = code[i];
+
+                        if (_sign == '"' || _sign == '>' || _sign == ' ')
+                        {
+                            attribute.ValueEndIndex = i;
+
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    attribute.ValueStartIndex = attribute.PropertyEndIndex + 2;
+                    attribute.ValueEndIndex = ParseAttributesGetQuotationMarkIndex(code, attribute.ValueStartIndex);
+                }
+
+                attribute.Value = code.Substring(attribute.ValueStartIndex, attribute.ValueEndIndex - attribute.ValueStartIndex).ToLower();
+            }
+
+            return attribute;
+        }
+
+        private static int ParseAttributesGetQuotationMarkIndex(string str, int startIndex)
+        {
+            for (int i = startIndex; i < str.Length; i++)
+            {
+                if (str[i] == '"')
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }
