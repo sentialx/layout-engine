@@ -445,15 +445,6 @@ namespace LayoutEngine
                 {
                     foreach (Rule rule in element.RuleSet.Rules)
                     {
-                        /*if (rule.ComputedValue != null && rule.ComputedValue.Unit == Unit.Percent)
-                        {
-                            if (rule.Property == "width")
-                            {
-                                float width = CSSUnits.PercentToPx(rule, element);
-
-                                element.ComputedStyle.Size.Width = width;
-                            }
-                        }*/
                         if (rule.ComputedValue != null)
                         {
                             float value = -1f;
