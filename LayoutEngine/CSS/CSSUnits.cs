@@ -147,7 +147,7 @@ namespace LayoutEngine
 
                 if (value == null)
                 {
-                    Console.WriteLine("Calc function insn't correct!");
+                    Console.WriteLine("Calc function isn't correct!");
 
                     return -1f;
                 }
