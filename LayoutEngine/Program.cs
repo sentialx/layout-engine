@@ -25,7 +25,6 @@ namespace LayoutEngine
                 Console.WriteLine(line);
             }
 
-            Console.WriteLine(CSSUnitsConverter.TurnToDeg(1));
             Console.ReadKey();
         }
 
