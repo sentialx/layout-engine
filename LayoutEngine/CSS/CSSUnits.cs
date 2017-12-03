@@ -112,9 +112,14 @@ namespace LayoutEngine
 
         public static float EmToPx(Rule rule, DOMElement element)
         {
-            float parentFontSize = (element.Parent != null) ? element.Parent.Style.Font.Size : 14; // 14 - Document font-size
+            float fontSize = (element.Parent != null) ? element.Parent.Style.Font.Size : 16; // 16 - Document font-size
 
-            return parentFontSize * rule.ComputedValue.Value;
+            if (element.Style.Font != null)
+            {
+                fontSize = element.Style.Font.Size;
+            }
+
+            return fontSize * rule.ComputedValue.Value;
         }
 
         public static float CalcFunction (Rule rule, DOMElement element)

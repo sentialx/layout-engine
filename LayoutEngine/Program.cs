@@ -42,7 +42,7 @@ namespace LayoutEngine
                 List<FontWeight> fontWeights = new List<FontWeight>();
                 List<TextDecoration> textDecorations = new List<TextDecoration>();
 
-                float fontSize = 14;
+                float fontSize = 16;
                 Color color = Color.Black;
 
                 List<Rule> inheritedStylesCopy = new List<Rule>();
@@ -134,6 +134,10 @@ namespace LayoutEngine
                                 }
                                 else if (rule.Property == "font-size")
                                 {
+                                    CSSValue parsedValue = CSSUnits.ParseValue(rule, element);
+
+                                    fontSize = parsedValue.Value;
+
                                     newInheritedStyles.Add(rule);
                                 }
                                 else if (rule.Property == "font-family")
@@ -550,6 +554,8 @@ namespace LayoutEngine
                     ruleSets.Add(rs);
                 }
             }
+
+            SetStyles(elements, ruleSets);
 
             SetStyles(elements, ruleSets);
 
