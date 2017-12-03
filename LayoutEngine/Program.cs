@@ -28,7 +28,7 @@ namespace LayoutEngine
             Console.ReadKey();
         }
 
-        private static void SetStyles(List<DOMElement> elements, List<RuleSet> ruleSets, List<Rule> inheritedStyles = null)
+        private static void SetFonts (List<DOMElement> elements, List<RuleSet> ruleSets, List<Rule> inheritedStyles = null)
         {
             if (inheritedStyles == null) inheritedStyles = new List<Rule>();
 
@@ -80,20 +80,6 @@ namespace LayoutEngine
                             textDecorations.Add(TextDecoration.Underline);
                         }
                     }
-                    else if (rule.Property == "padding-top")
-                    {
-                        float paddingTop = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
-                        element.ComputedStyle.Padding.Top = paddingTop;
-
-                        inheritedStylesCopy.Remove(rule);
-                    }
-                    else if (rule.Property == "padding-left")
-                    {
-                        float paddingLeft = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
-                        element.ComputedStyle.Padding.Left = paddingLeft;
-
-                        inheritedStylesCopy.Remove(rule);
-                    }
                     else if (rule.Property == "font-size")
                     {
                         CSSValue parsedValue = CSSUnits.ParseValue(rule, element);
@@ -103,7 +89,7 @@ namespace LayoutEngine
                         inheritedStylesCopy.Remove(rule);
                     }
                 }
-                
+
                 // Set styles for current element.
                 if (element.Type == DOMElementType.Normal)
                 {
@@ -159,7 +145,87 @@ namespace LayoutEngine
 
                                     newInheritedStyles.Add(rule);
                                 }
-                                else if (rule.Property == "padding-top")
+                            }
+                        }
+                    }
+                }
+
+                // Apply all the font styles added before.
+                Font font = new Font(new FontFamily(fontFamily), fontSize, System.Drawing.FontStyle.Regular, GraphicsUnit.Pixel);
+
+                foreach (FontStyle fontStyle in fontStyles)
+                {
+                    if (fontStyle == FontStyle.Italic) font = new Font(font, font.Style ^ System.Drawing.FontStyle.Italic);
+                }
+
+                foreach (FontWeight fontWeight in fontWeights)
+                {
+                    if (fontWeight == FontWeight.Bold) font = new Font(font, font.Style ^ System.Drawing.FontStyle.Bold);
+                    else if (fontWeight == FontWeight.Normal) font = new Font(font, font.Style ^ System.Drawing.FontStyle.Regular);
+                }
+
+                foreach (TextDecoration textDecoration in textDecorations)
+                {
+                    if (textDecoration == TextDecoration.Underline) font = new Font(font, font.Style ^ System.Drawing.FontStyle.Underline);
+                }
+
+                element.Style.Font = font;
+
+                // Pass used styles by the current element and its parents, to its children.
+                foreach (Rule rule in inheritedStylesCopy)
+                {
+                    newInheritedStyles.Add(rule);
+                }
+
+                if (element.Children.Count > 0) SetFonts(element.Children, ruleSets, newInheritedStyles);
+            }
+        }
+
+        private static void SetStyles(List<DOMElement> elements, List<RuleSet> ruleSets, List<Rule> inheritedStyles = null)
+        {
+            if (inheritedStyles == null) inheritedStyles = new List<Rule>();
+
+            foreach (DOMElement element in elements)
+            {
+                List<Rule> newInheritedStyles = new List<Rule>();
+                List<Rule> inheritedStylesCopy = new List<Rule>();
+                inheritedStylesCopy.AddRange(inheritedStyles);
+
+                // Set styles for current element used by its parents.
+
+                foreach (Rule rule in inheritedStyles)
+                {
+                    if (rule.Property == "padding-top")
+                    {
+                        float paddingTop = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                        element.ComputedStyle.Padding.Top = paddingTop;
+
+                        inheritedStylesCopy.Remove(rule);
+                    }
+                    else if (rule.Property == "padding-left")
+                    {
+                        float paddingLeft = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                        element.ComputedStyle.Padding.Left = paddingLeft;
+
+                        inheritedStylesCopy.Remove(rule);
+                    }
+                }
+                
+                // Set styles for current element.
+                if (element.Type == DOMElementType.Normal)
+                {
+                    string selector = element.Tag.Name;
+
+                    foreach (RuleSet ruleSet in ruleSets)
+                    {
+                        // Check if the selector in the rule set is matching current element's selector.
+                        if (ruleSet.Selector == selector)
+                        {
+                            element.RuleSet = ruleSet;
+
+                            foreach (Rule rule in ruleSet.Rules)
+                            {
+                                if (rule.Property == "padding-top")
                                 {
                                     element.Style.Padding.Top = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
 
@@ -246,27 +312,6 @@ namespace LayoutEngine
                         }
                     }
                 }
-
-                // Apply all the font styles added before.
-                Font font = new Font(new FontFamily(fontFamily), fontSize, System.Drawing.FontStyle.Regular, GraphicsUnit.Pixel);
-
-                foreach (FontStyle fontStyle in fontStyles)
-                {
-                    if (fontStyle == FontStyle.Italic) font = new Font(font, font.Style ^ System.Drawing.FontStyle.Italic);
-                }
-
-                foreach (FontWeight fontWeight in fontWeights)
-                {
-                    if (fontWeight == FontWeight.Bold) font = new Font(font, font.Style ^ System.Drawing.FontStyle.Bold);
-                    else if (fontWeight == FontWeight.Normal) font = new Font(font, font.Style ^ System.Drawing.FontStyle.Regular);
-                }
-
-                foreach (TextDecoration textDecoration in textDecorations)
-                {
-                    if (textDecoration == TextDecoration.Underline) font = new Font(font, font.Style ^ System.Drawing.FontStyle.Underline);
-                }
-
-                element.Style.Font = font;
 
                 // Pass used styles by the current element and its parents, to its children.
                 foreach (Rule rule in inheritedStylesCopy)
@@ -555,7 +600,7 @@ namespace LayoutEngine
                 }
             }
 
-            SetStyles(elements, ruleSets);
+            SetFonts(elements, ruleSets);
 
             SetStyles(elements, ruleSets);
 
