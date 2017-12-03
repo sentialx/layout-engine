@@ -28,6 +28,91 @@ namespace LayoutEngine
             Console.ReadKey();
         }
 
+        private static bool ElementHasSelector (DOMElement element, string selector)
+        {
+            string tag = element.Tag.Name;
+            List<string> classes = new List<string>();
+            string id = "";
+
+            foreach (HTMLAttribute attr in element.Tag.Attributes)
+            {
+                if (attr.Property == "class")
+                {
+                    foreach (string className in attr.Value.ToLower().Split(' '))
+                    {
+                        classes.Add(className);
+                    }
+                }
+                else if (attr.Property == "id")
+                {
+                    id = attr.Value;
+                }
+            }
+
+            bool canUseStyle = false;
+            string tagSelector = selector;
+            List<string> classesSelector = new List<string>();
+            string idSelector = "";
+
+            if (tagSelector == tag) canUseStyle = true;
+
+            tagSelector = "";
+
+            int startingIndex = 0;
+
+            if (selector.Contains("."))
+            {
+                if (selector.Split('.')[0] != "")
+                {
+                    startingIndex = 1;
+
+                    tagSelector = selector.Split('.')[0];
+                }
+            }
+
+            if (selector.Contains("#"))
+            {
+                if (selector.Split('#')[0] != "")
+                {
+                    tagSelector = selector.Split('#')[0];
+                }
+            }
+
+            if (tagSelector == tag)
+            {
+                canUseStyle = true;
+            }
+            else if (tagSelector == "")
+            {
+                tagSelector = tag;
+            }
+
+            if (tagSelector == tag && !canUseStyle)
+            {
+                if (selector.Contains("#"))
+                {
+                    idSelector = selector.Split('#')[1];
+                    if (idSelector == id) canUseStyle = true;
+                }
+                else if (selector.Contains("."))
+                {
+                    for (int i = startingIndex; i < selector.Split('.').Length; i++)
+                    {
+                        foreach (string className in classes)
+                        {
+                            if (selector.Split('.')[i] == className)
+                            {
+                                canUseStyle = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return canUseStyle;
+        }
+
         private static void SetFonts (List<DOMElement> elements, List<RuleSet> ruleSets, List<Rule> inheritedStyles = null)
         {
             if (inheritedStyles == null) inheritedStyles = new List<Rule>();
@@ -93,12 +178,10 @@ namespace LayoutEngine
                 // Set styles for current element.
                 if (element.Type == DOMElementType.Normal)
                 {
-                    string selector = element.Tag.Name;
-
                     foreach (RuleSet ruleSet in ruleSets)
                     {
                         // Check if the selector in the rule set is matching current element's selector.
-                        if (ruleSet.Selector == selector)
+                        if (ElementHasSelector(element, ruleSet.Selector))
                         {
                             element.RuleSet = ruleSet;
 
@@ -214,12 +297,10 @@ namespace LayoutEngine
                 // Set styles for current element.
                 if (element.Type == DOMElementType.Normal)
                 {
-                    string selector = element.Tag.Name;
-
                     foreach (RuleSet ruleSet in ruleSets)
                     {
                         // Check if the selector in the rule set is matching current element's selector.
-                        if (ruleSet.Selector == selector)
+                        if (ElementHasSelector(element, ruleSet.Selector))
                         {
                             element.RuleSet = ruleSet;
 

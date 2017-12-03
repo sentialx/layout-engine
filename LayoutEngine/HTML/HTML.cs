@@ -134,7 +134,7 @@ namespace LayoutEngine
 
             if (tagType == TagType.Opening)
             {
-                htmlTag.attributes = ParseAttributes(tagCode);
+                htmlTag.Attributes = ParseAttributes(tagCode);
             }
 
             element.Tag = htmlTag;
@@ -381,9 +381,9 @@ namespace LayoutEngine
         /// <summary>
         /// Parses tag code into attributes
         /// </summary>
-        private static List<HTMLTagAttribute> ParseAttributes(string tagCode)
+        private static List<HTMLAttribute> ParseAttributes(string tagCode)
         {
-            List<HTMLTagAttribute> attributesList = new List<HTMLTagAttribute>();
+            List<HTMLAttribute> attributesList = new List<HTMLAttribute>();
             List<int> spaceIndexes = Utils.GetIndexes(tagCode, " "); // Get indexes of all spaces
 
             foreach (int spaceIndex in spaceIndexes)
@@ -399,10 +399,10 @@ namespace LayoutEngine
                     // Check if there is attribute not separated with space
                     if (nextSign != ' ' && nextSign != '>')
                     {
-                        HTMLTagAttribute attribute = ParseAttribute(tagCode, index);
+                        HTMLAttribute attribute = ParseAttribute(tagCode, index);
 
                         // Check if during attribute parsing, occurred an error
-                        if (attribute == null) return new List<HTMLTagAttribute>();
+                        if (attribute == null) return new List<HTMLAttribute>();
 
                         attributesList.Add(attribute);
 
@@ -422,18 +422,18 @@ namespace LayoutEngine
         /// <summary>
         /// Fixes attributes list
         /// </summary>
-        private static List<HTMLTagAttribute> FixHTMLAttributes (List<HTMLTagAttribute> list)
+        private static List<HTMLAttribute> FixHTMLAttributes (List<HTMLAttribute> list)
         {
-            List<HTMLTagAttribute> fixedList = new List<HTMLTagAttribute>();
+            List<HTMLAttribute> fixedList = new List<HTMLAttribute>();
 
             // Add first attribute
             if (list.Count > 0) fixedList.Add(list[0]);
 
-            HTMLTagAttribute lastAttributeWithValue = new HTMLTagAttribute();
+            HTMLAttribute lastAttributeWithValue = new HTMLAttribute();
 
             for (int i = 0; i < list.Count; i++)
             {
-                HTMLTagAttribute attribute = list[i];
+                HTMLAttribute attribute = list[i];
 
                 if (i > 0 && lastAttributeWithValue.PropertyStartIndex != 1 && attribute.Property.Length > 0)
                 {
@@ -457,9 +457,9 @@ namespace LayoutEngine
         /// <summary>
         /// Parses html tag code into attribute
         /// </summary>
-        private static HTMLTagAttribute ParseAttribute(string code, int startIndex)
+        private static HTMLAttribute ParseAttribute(string code, int startIndex)
         {
-            HTMLTagAttribute attribute = new HTMLTagAttribute();
+            HTMLAttribute attribute = new HTMLAttribute();
 
             attribute.PropertyStartIndex = startIndex;
 

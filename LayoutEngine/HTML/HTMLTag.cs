@@ -7,6 +7,6 @@ namespace LayoutEngine
         public string Name;
         public string Code;
         public TagType Type;
-        public List<HTMLTagAttribute> attributes;
+        public List<HTMLAttribute> Attributes;
     }
 }

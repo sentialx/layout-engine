@@ -1,6 +1,6 @@
 ﻿namespace LayoutEngine
 {
-    public class HTMLTagAttribute
+    public class HTMLAttribute
     {
         public string Property = "";
         public string Value = "";

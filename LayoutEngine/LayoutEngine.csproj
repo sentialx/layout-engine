@@ -62,7 +62,7 @@
     <Compile Include="HTML\HTMLDocument.cs" />
     <Compile Include="HTML\HTML.cs" />
     <Compile Include="HTML\HTMLTag.cs" />
-    <Compile Include="HTML\HTMLTagAttribute.cs" />
+    <Compile Include="HTML\HTMLAttribute.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSS\Rule.cs" />
