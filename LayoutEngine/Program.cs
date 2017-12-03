@@ -511,6 +511,9 @@ namespace LayoutEngine
                                 if (rule.Property == "width")
                                 {
                                     element.ComputedStyle.Size.Width = value;
+                                } else if (rule.Property == "height")
+                                {
+                                    element.ComputedStyle.Size.Height = value;
                                 }
                             }
                         }
