@@ -28,7 +28,7 @@ namespace LayoutEngine
             Console.ReadKey();
         }
 
-        private static bool ElementHasSelector (DOMElement element, string selector)
+        private static bool ElementHasSelector(DOMElement element, string selector)
         {
             string tag = element.Tag.Name;
             List<string> classes = new List<string>();
@@ -60,23 +60,17 @@ namespace LayoutEngine
 
             int startingIndex = 0;
 
-            if (selector.Contains("."))
-            {
-                if (selector.Split('.')[0] != "")
-                {
-                    startingIndex = 1;
+            string temp = "";
 
-                    tagSelector = selector.Split('.')[0];
-                }
+            for (int i = 0; i < selector.Length; i++)
+            {
+                if (selector[i] == '.') startingIndex = 1;
+                if (selector[i] == '.' || selector[i] == '#') break;
+
+                temp += selector[i];
             }
 
-            if (selector.Contains("#"))
-            {
-                if (selector.Split('#')[0] != "")
-                {
-                    tagSelector = selector.Split('#')[0];
-                }
-            }
+            if (tagSelector != "") tagSelector = temp;
 
             if (tagSelector == tag)
             {
