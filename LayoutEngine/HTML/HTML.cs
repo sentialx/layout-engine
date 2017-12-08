@@ -84,7 +84,8 @@ namespace LayoutEngine
 
             HTMLDocument htmlDocument = new HTMLDocument
             {
-                Children = domTree
+                Children = domTree,
+                MetaTags = metaTags
             };
 
             return htmlDocument;
@@ -541,12 +542,49 @@ namespace LayoutEngine
 
         private static List<Meta> GetMetaTags(List<DOMElement> elements)
         {
-            /*foreach (DOMElement element in elements)
-            { 
-                Console.WriteLine(element.Tag.Name);
-            }*/
+            List<Meta> metaTags = new List<Meta>();
 
-            return new List<Meta>();
+            foreach (DOMElement element in elements)
+            {
+                if (element.Tag.Name.ToLower() == "meta")
+                {
+                    Meta tag = new Meta();
+
+                    foreach (HTMLAttribute attribute in element.Tag.Attributes)
+                    {
+                        if (attribute.Property == "name")
+                        {
+                            tag.Property = MetaType.ViewportWidth;
+                        }
+                        else if (attribute.Property == "content")
+                        {
+                            tag.Value = attribute.Value;
+                            tag.ComputedValue = ParseMetaViewPort(attribute.Value);
+                        }
+                    }
+
+                    metaTags.Add(tag);
+
+                    if (tag.Property == MetaType.ViewportWidth)
+                    {
+                        Meta height = new Meta();
+
+                        height.Property = MetaType.ViewportHeight;
+                        height.Value = tag.Value;
+                        height.ComputedValue = ParseMetaViewPort(tag.Value, false);
+
+                        metaTags.Add(height);
+                    }
+                }
+            }
+
+            return metaTags;
+        }
+
+        // TODO
+        private static float ParseMetaViewPort(string content, bool width = true)
+        {
+            return width ? Program.deviceWidth : Program.deviceHeight;
         }
     }
 }

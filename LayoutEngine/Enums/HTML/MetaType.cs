@@ -2,6 +2,7 @@
 {
     public enum MetaType
     {
-        Viewport
+        ViewportWidth,
+        ViewportHeight
     }
 }

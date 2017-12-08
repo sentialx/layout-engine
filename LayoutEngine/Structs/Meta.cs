@@ -2,9 +2,8 @@
 {
     public struct Meta
     {
-        public string name;
-        public string content;
-        public MetaType type;
-        public float value;
+        public MetaType Property;
+        public string Value;
+        public float ComputedValue;
     }
 }
