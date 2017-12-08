@@ -231,6 +231,10 @@ td {
     display: table-cell;
 }
 
+meta {
+    display: none;
+}
+
 testa {
     width: 256px;
     height: 256px;

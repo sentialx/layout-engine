@@ -54,6 +54,7 @@
     <Compile Include="Enums\CSS\Unit.cs" />
     <Compile Include="Enums\HTML\DOMElementType.cs" />
     <Compile Include="Enums\HTML\ElementType.cs" />
+    <Compile Include="Enums\HTML\MetaType.cs" />
     <Compile Include="Enums\HTML\TagType.cs" />
     <Compile Include="HTML\DOM\ComputedStyle.cs" />
     <Compile Include="HTML\DOM\DOMElement.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="CSS\RuleSet.cs" />
     <Compile Include="Structs\Border.cs" />
     <Compile Include="Structs\Margin.cs" />
+    <Compile Include="Structs\Meta.cs" />
     <Compile Include="Structs\Padding.cs" />
     <Compile Include="Structs\Position.cs" />
     <Compile Include="Structs\Size.cs" />

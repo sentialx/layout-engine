@@ -79,6 +79,9 @@ namespace LayoutEngine
             // Get DOM tree.
             List<DOMElement> domTree = GetDOMTree(elements);
 
+            // TODO
+            List<Meta> metaTags = GetMetaTags(domTree);
+
             HTMLDocument htmlDocument = new HTMLDocument
             {
                 Children = domTree
@@ -534,6 +537,16 @@ namespace LayoutEngine
         {
             for (int i = startIndex; i < str.Length; i++) if (str[i] == '"') return i;
             return -1;
+        }
+
+        private static List<Meta> GetMetaTags(List<DOMElement> elements)
+        {
+            /*foreach (DOMElement element in elements)
+            { 
+                Console.WriteLine(element.Tag.Name);
+            }*/
+
+            return new List<Meta>();
         }
     }
 }
