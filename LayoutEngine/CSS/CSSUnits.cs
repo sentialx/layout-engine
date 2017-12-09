@@ -40,6 +40,7 @@ namespace LayoutEngine
                     else if (unitType == "pc") cssValue.Unit = Unit.Pc;
                     else if (unitType == "%") cssValue.Unit = Unit.Percent;
                     else if (unitType == "em") cssValue.Unit = Unit.Em;
+                    else if (unitType == "vh") cssValue.Unit = Unit.Vh;
 
                     rule.ComputedValue = cssValue;
 
@@ -85,6 +86,10 @@ namespace LayoutEngine
             {
                 return EmToPx(rule, element);
             }
+            else if (cssValue.Unit == Unit.Vh)
+            {
+                return VhToPx(rule, element);
+            }
 
             return -1f;
         }
@@ -120,6 +125,11 @@ namespace LayoutEngine
             }
 
             return fontSize * rule.ComputedValue.Value;
+        }
+
+        public static float VhToPx(Rule rule, DOMElement element)
+        {
+            return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Height;
         }
 
         public static float CalcFunction (Rule rule, DOMElement element)

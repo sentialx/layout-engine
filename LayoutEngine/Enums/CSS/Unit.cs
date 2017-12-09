@@ -3,7 +3,8 @@
     public enum Unit
     {
         None,
-        Em,
+        Em,      // Relative to the font-size of the element
+        Vh,      // Relative to 1% of the height of the viewport
         Percent, // Percent
         Px,      // Pixels
         Cm,      // Centimeters

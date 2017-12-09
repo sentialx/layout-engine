@@ -79,7 +79,6 @@ namespace LayoutEngine
             // Get DOM tree.
             List<DOMElement> domTree = GetDOMTree(elements);
 
-            // TODO
             List<Meta> metaTags = GetMetaTags(domTree);
 
             HTMLDocument htmlDocument = new HTMLDocument

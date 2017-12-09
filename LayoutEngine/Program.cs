@@ -10,6 +10,7 @@ namespace LayoutEngine
         public static int deviceHeight = 768;
 
         private static Bitmap bmp;
+        public static HTMLDocument htmlDocument;
 
         static void Main(string[] args)
         {
@@ -723,9 +724,9 @@ namespace LayoutEngine
 
         private static void Render (string html)
         {
-            HTMLDocument document = HTML.Parse(html);
+            htmlDocument = HTML.Parse(html);
 
-            List<DOMElement> elements = document.Children;
+            List<DOMElement> elements = htmlDocument.Children;
 
             bmp = new Bitmap(deviceWidth, deviceHeight);
 
