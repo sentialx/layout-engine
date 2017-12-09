@@ -41,6 +41,7 @@ namespace LayoutEngine
                     else if (unitType == "%") cssValue.Unit = Unit.Percent;
                     else if (unitType == "em") cssValue.Unit = Unit.Em;
                     else if (unitType == "vh") cssValue.Unit = Unit.Vh;
+                    else if (unitType == "vw") cssValue.Unit = Unit.Vw;
 
                     rule.ComputedValue = cssValue;
 
@@ -90,6 +91,10 @@ namespace LayoutEngine
             {
                 return VhToPx(rule, element);
             }
+            else if (cssValue.Unit == Unit.Vw)
+            {
+                return VwToPx(rule, element);
+            }
 
             return -1f;
         }
@@ -130,6 +135,11 @@ namespace LayoutEngine
         public static float VhToPx(Rule rule, DOMElement element)
         {
             return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Height;
+        }
+
+        public static float VwToPx(Rule rule, DOMElement element)
+        {
+            return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Width;
         }
 
         public static float CalcFunction (Rule rule, DOMElement element)
