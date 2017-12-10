@@ -116,7 +116,7 @@ namespace LayoutEngine
             }
             else if (rule.Property == "height")
             {
-                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : 0;
+                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : Program.deviceHeight;
 
                 return (rule.ComputedValue.ValueBeforeComputing / 100) * parentHeight;
             }

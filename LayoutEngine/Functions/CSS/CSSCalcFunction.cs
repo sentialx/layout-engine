@@ -33,6 +33,7 @@ namespace LayoutEngine
                 }
                 else
                 {
+                    Console.WriteLine(value);
                     return float.Parse(new DataTable().Compute(value, "").ToString().Replace(',', '.'), CultureInfo.InvariantCulture.NumberFormat);
                 }
             }
@@ -51,12 +52,13 @@ namespace LayoutEngine
                 string unit = CSSUnits.GetUnitAbbreviation(unitType);
 
                 int unitStartIndex = calcString.IndexOf(unit);
-                if (unitStartIndex == -1) break;
                 int unitEndIndex = unitStartIndex + unit.Length;
+
+                // If there is no unit
+                if (unitStartIndex == -1) break;
 
                 // Get starting value index
                 int valueStartIndex = GetStartIndex(calcString, unitStartIndex);
-
                 if (valueStartIndex == unitStartIndex) return null;
 
                 // Get and parse value
@@ -102,8 +104,6 @@ namespace LayoutEngine
                     break;
                 }
             }
-
-            Console.WriteLine(startIndex);
 
             return startIndex;
         }
