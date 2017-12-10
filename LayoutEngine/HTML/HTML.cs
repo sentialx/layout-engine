@@ -545,7 +545,7 @@ namespace LayoutEngine
 
             foreach (DOMElement element in elements)
             {
-                if (element.Tag.Name.ToLower() == "meta")
+                if (element.Type == DOMElementType.Normal && element.Tag.Name.ToLower() == "meta")
                 {
                     Meta tag = new Meta();
 

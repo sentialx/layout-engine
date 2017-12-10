@@ -634,6 +634,13 @@ namespace LayoutEngine
                         element.ComputedStyle.Position.X += (prevElement.Style.Margin.Right >= element.Style.Margin.Left)
                             ? prevElement.Style.Margin.Right 
                             : element.Style.Margin.Left;
+
+                    }
+
+                    if (prevElement.Style.Display == Display.None)
+                    {
+                        element.ComputedStyle.Position.X = prevElement.ComputedStyle.Position.X;
+                        element.ComputedStyle.Position.Y = prevElement.ComputedStyle.Position.Y;
                     }
                 }
                 else
@@ -691,31 +698,34 @@ namespace LayoutEngine
         {
             foreach (DOMElement element in elements)
             {
-                using (Graphics graphics = Graphics.FromImage(bmp))
+                if (element.Style.Display != Display.None)
                 {
-                    graphics.PageUnit = GraphicsUnit.Pixel;
-
-                    Position position = element.ComputedStyle.Position;
-                    Size size = element.ComputedStyle.Size;
-                    Border border = element.Style.Border;
-
-                    if (element.Style.BackgroundColor != Color.Transparent)
+                    using (Graphics graphics = Graphics.FromImage(bmp))
                     {
-                        graphics.FillRectangle(new SolidBrush(element.Style.BackgroundColor), position.X, position.Y, size.Width, size.Height);
+                        graphics.PageUnit = GraphicsUnit.Pixel;
+
+                        Position position = element.ComputedStyle.Position;
+                        Size size = element.ComputedStyle.Size;
+                        Border border = element.Style.Border;
+
+                        if (element.Style.BackgroundColor != Color.Transparent)
+                        {
+                            graphics.FillRectangle(new SolidBrush(element.Style.BackgroundColor), position.X, position.Y, size.Width, size.Height);
+                        }
+
+                        graphics.DrawRectangle(new Pen(new SolidBrush(border.Color), border.Width), position.X, position.Y, size.Width, size.Height);
+
+                        if (element.Type == DOMElementType.Text)
+                        {
+                            graphics.DrawString(element.Content, element.Style.Font, new SolidBrush(element.Style.Color), position.X, position.Y);
+                        }
+
+                        graphics.Flush();
+                        graphics.Dispose();
                     }
 
-                    graphics.DrawRectangle(new Pen(new SolidBrush(border.Color), border.Width), position.X, position.Y, size.Width, size.Height);
-
-                    if (element.Type == DOMElementType.Text)
-                    {
-                        graphics.DrawString(element.Content, element.Style.Font, new SolidBrush(element.Style.Color), position.X, position.Y);
-                    }
-
-                    graphics.Flush();
-                    graphics.Dispose();
+                    if (element.Children.Count > 0) Render(element.Children);
                 }
-
-                if (element.Children.Count > 0) Render(element.Children);
             }
         }
 

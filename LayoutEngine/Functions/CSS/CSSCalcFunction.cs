@@ -33,7 +33,6 @@ namespace LayoutEngine
                 }
                 else
                 {
-                    Console.WriteLine(value);
                     return float.Parse(new DataTable().Compute(value, "").ToString().Replace(',', '.'), CultureInfo.InvariantCulture.NumberFormat);
                 }
             }
