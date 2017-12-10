@@ -303,51 +303,47 @@ namespace LayoutEngine
                             {
                                 if (rule.Property == "padding-top")
                                 {
-                                    element.Style.Padding.Top = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    element.Style.Padding.Top = CSSUnits.ParseValue(rule, element).Value;
 
                                     newInheritedStyles.Add(rule);
                                 }
                                 else if (rule.Property == "padding-left")
                                 {
-                                    element.Style.Padding.Left = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    element.Style.Padding.Left = CSSUnits.ParseValue(rule, element).Value;
 
                                     newInheritedStyles.Add(rule);
                                 }
                                 else if (rule.Property == "padding-right")
                                 {
-                                    element.Style.Padding.Right = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    element.Style.Padding.Right = CSSUnits.ParseValue(rule, element).Value;
                                 }
                                 else if (rule.Property == "padding-bottom")
                                 {
-                                    element.Style.Padding.Bottom = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    element.Style.Padding.Bottom = CSSUnits.ParseValue(rule, element).Value;
                                 }
                                 else if (rule.Property == "margin-top")
                                 {
-                                    element.Style.Margin.Top = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    element.Style.Margin.Top = CSSUnits.ParseValue(rule, element).Value;
                                 }
                                 else if (rule.Property == "margin-bottom")
                                 {
-                                    element.Style.Margin.Bottom = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    element.Style.Margin.Bottom = CSSUnits.ParseValue(rule, element).Value;
                                 }
                                 else if (rule.Property == "margin-left")
                                 {
-                                    element.Style.Margin.Left = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    element.Style.Margin.Left = CSSUnits.ParseValue(rule, element).Value;
                                 }
                                 else if (rule.Property == "margin-right")
                                 {
-                                    element.Style.Margin.Right = float.Parse(rule.Value.Split(new string[] { "px" }, StringSplitOptions.None)[0]);
+                                    element.Style.Margin.Right = CSSUnits.ParseValue(rule, element).Value;
                                 }
                                 else if (rule.Property == "height")
                                 {
-                                    CSSValue parsedValue = CSSUnits.ParseValue(rule, element);
-
-                                    element.Style.Size.Height = parsedValue.Value;
+                                    element.Style.Size.Height = CSSUnits.ParseValue(rule, element).Value;
                                 }
                                 else if (rule.Property == "width")
                                 {
-                                    CSSValue parsedValue = CSSUnits.ParseValue(rule, element);
-
-                                    element.Style.Size.Width = parsedValue.Value;
+                                    element.Style.Size.Width = CSSUnits.ParseValue(rule, element).Value;
                                 }
                                 else if (rule.Property == "background-color")
                                 {
@@ -575,11 +571,11 @@ namespace LayoutEngine
 
                             if (rule.ComputedValue.Unit == Unit.Percent)
                             {
-                                value = CSSUnits.PercentToPx(rule, element);
+                                value = CSSUnitsConverter.PercentToPx(rule, element);
                             }
                             else if (rule.ComputedValue.Unit == Unit.CalcFunc)
                             {
-                                value = CSSUnits.CalcFunction(rule, element);
+                                value = CSSCalcFunction.Calculate(rule, element);
                             }
 
                             if (value != -1f)

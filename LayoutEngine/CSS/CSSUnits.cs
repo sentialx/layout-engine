@@ -1,16 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace LayoutEngine
 {
     public class CSSUnits
     {
+        public static List<Unit> allUnits = new List<Unit>()
+        {
+            Unit.Px,
+            Unit.Cm,
+            Unit.Mm,
+            Unit.In,
+            Unit.Pt,
+            Unit.Pc,
+            Unit.Percent,
+            Unit.Em,
+            Unit.Vh,
+            Unit.Vw
+        };
+
         public static CSSValue ParseValue (Rule rule, DOMElement element)
         {
             CSSValue cssValue = new CSSValue();
@@ -32,16 +44,15 @@ namespace LayoutEngine
                     string unitType = rule.Value.Substring(startIndex, rule.Value.Length - startIndex).ToLower();
                     cssValue.Value = value;
 
-                    if (unitType == "px") cssValue.Unit = Unit.Px;
-                    else if (unitType == "cm") cssValue.Unit = Unit.Cm;
-                    else if (unitType == "mm") cssValue.Unit = Unit.Mm;
-                    else if (unitType == "in") cssValue.Unit = Unit.In;
-                    else if (unitType == "pt") cssValue.Unit = Unit.Pt;
-                    else if (unitType == "pc") cssValue.Unit = Unit.Pc;
-                    else if (unitType == "%") cssValue.Unit = Unit.Percent;
-                    else if (unitType == "em") cssValue.Unit = Unit.Em;
-                    else if (unitType == "vh") cssValue.Unit = Unit.Vh;
-                    else if (unitType == "vw") cssValue.Unit = Unit.Vw;
+                    foreach (Unit unit in allUnits)
+                    {
+                        string abbreviation = GetUnitAbbreviation(unit);
+
+                        if (unitType == abbreviation)
+                        {
+                            cssValue.Unit = unit;
+                        }
+                    }
 
                     rule.ComputedValue = cssValue;
 
@@ -55,7 +66,7 @@ namespace LayoutEngine
             return null;
         }
 
-        private static float ConvertAnyUnitToPixels (Rule rule, DOMElement element)
+        public static float ConvertAnyUnitToPixels (Rule rule, DOMElement element)
         {
             CSSValue cssValue = rule.ComputedValue;
 
@@ -77,7 +88,7 @@ namespace LayoutEngine
             }
             else if (cssValue.Unit == Unit.Percent)
             {
-                return PercentToPx(rule, element);
+                return CSSUnitsConverter.PercentToPx(rule, element);
             }
             else if (cssValue.Unit == Unit.Pt)
             {
@@ -85,171 +96,18 @@ namespace LayoutEngine
             }
             else if (cssValue.Unit == Unit.Em)
             {
-                return EmToPx(rule, element);
+                return CSSUnitsConverter.EmToPx(rule, element);
             }
             else if (cssValue.Unit == Unit.Vh)
             {
-                return VhToPx(rule, element);
+                return CSSUnitsConverter.VhToPx(rule, element);
             }
             else if (cssValue.Unit == Unit.Vw)
             {
-                return VwToPx(rule, element);
+                return CSSUnitsConverter.VwToPx(rule, element);
             }
 
             return -1f;
-        }
-
-        public static float PercentToPx (Rule rule, DOMElement element)
-        {
-            if (rule.Property == "width") {
-                float parentWidth = (element.Parent != null) ? element.Parent.ComputedStyle.Size.Width : Program.deviceWidth;
-                
-                float width = (rule.ComputedValue.ValueBeforeComputing / 100) * parentWidth;
-                
-                return width;
-            }
-            else if (rule.Property == "height")
-            {
-                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : 0;
-
-                float height = (rule.ComputedValue.ValueBeforeComputing / 100) * parentHeight;
-
-                return height;
-            }
-
-            return 0f;
-        }
-
-        public static float EmToPx(Rule rule, DOMElement element)
-        {
-            float fontSize = (element.Parent != null) ? element.Parent.Style.Font.Size : 16; // 16 - Document font-size
-
-            if (element.Style.Font != null)
-            {
-                fontSize = element.Style.Font.Size;
-            }
-
-            return fontSize * rule.ComputedValue.Value;
-        }
-
-        public static float VhToPx(Rule rule, DOMElement element)
-        {
-            return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Height;
-        }
-
-        public static float VwToPx(Rule rule, DOMElement element)
-        {
-            return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Width;
-        }
-
-        public static float CalcFunction (Rule rule, DOMElement element)
-        {
-            try
-            {
-                // Cut unnecessary parts
-                string value = rule.Value.Split(new[] { "calc(" }, StringSplitOptions.None)[1];
-                value = value.ToLower();
-
-                if (value[value.Length - 1] != ')') return -1f;
-                else value = value.Substring(0, value.Length - 1);
-
-                if (value.Length < 2) return -1f;
-
-                // Cut pixel unit
-                value = CalcFunctionCompute(rule, element, value, Unit.Px, false);
-
-                Unit[] units = new Unit[] {
-                    Unit.Cm,
-                    Unit.Em,
-                    Unit.In,
-                    Unit.Mm,
-                    Unit.Pc,
-                    Unit.Percent,
-                    Unit.Pt
-                };
-
-                foreach (Unit unit in units) value = CalcFunctionCompute(rule, element, value, unit);
-
-                if (value == null)
-                {
-                    Console.WriteLine("Calc function isn't correct!");
-
-                    return -1f;
-                }
-                else
-                {
-                    float computedValue = float.Parse(new DataTable().Compute(value, "").ToString().Replace(',', '.'), CultureInfo.InvariantCulture.NumberFormat);
-
-                    return computedValue;
-                }
-            } catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-
-                return -1f;
-            }
-        }
-
-        private static string CalcFunctionCompute (Rule rule, DOMElement element, string calcString, Unit unitType, bool convert = true)
-        {
-            while (true)
-            {
-                string unit = GetUnitAbbreviation(unitType);
-
-                int unitStartIndex = calcString.IndexOf(unit);
-                if (unitStartIndex == -1) break;
-                int unitEndIndex = unitStartIndex + unit.Length;
-
-                // Get starting value index
-                int valueStartIndex = CalcFunctionGetStartIndex(calcString, unitStartIndex);
-
-                if (valueStartIndex == unitStartIndex) return null;
-
-                // Get and parse value
-                string value = calcString.Substring(valueStartIndex, unitStartIndex - valueStartIndex);
-                float parsedValue = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
-
-                // Compute the value
-                if (convert)
-                {
-                    rule.ComputedValue.Unit = unitType;
-                    rule.ComputedValue.ValueBeforeComputing = parsedValue;
-                    rule.ComputedValue.Value = parsedValue;
-                }
-
-                float computedValue = (convert) ? ConvertAnyUnitToPixels(rule, element) : parsedValue;
-
-                // Replace string with computed value
-                StringBuilder stringBuilder = new StringBuilder(calcString);
-                stringBuilder.Remove(valueStartIndex, unitStartIndex - valueStartIndex + unit.Length);
-                stringBuilder.Insert(valueStartIndex, computedValue.ToString().Replace(',', '.'));
-
-                calcString = stringBuilder.ToString();
-            }
-
-            return calcString;
-        }
-
-        private static int CalcFunctionGetStartIndex (string str, int index)
-        {
-            int startIndex = -1;
-
-            for (int i = index - 1; i >= 0; i--)
-            {
-                char sign = str[i];
-                bool isArithmeticSign = (sign == '+' || sign == '-' || sign == '*' || sign == '/');
-                bool isSpace = (sign == ' ');
-
-                if (i == 0 || isSpace || isArithmeticSign)
-                {
-                    if (isArithmeticSign || isSpace) i++;
-
-                    startIndex = i;
-                    break;
-                }
-            }
-
-            return startIndex;
         }
 
         public static string GetUnitAbbreviation (Unit unit)
@@ -262,6 +120,8 @@ namespace LayoutEngine
             else if (unit == Unit.Pc) return "pc";
             else if (unit == Unit.Percent) return "%";
             else if (unit == Unit.Em) return "em";
+            else if (unit == Unit.Vh) return "vh";
+            else if (unit == Unit.Vw) return "vw";
 
             return null;
         }

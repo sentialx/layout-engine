@@ -71,5 +71,57 @@ namespace LayoutEngine
         {
             return val * 360f;
         }
+
+        /// <summary>
+        //  Calculates x times the size of the current font
+        /// </summary>
+        public static float EmToPx(Rule rule, DOMElement element)
+        {
+            float fontSize = (element.Parent != null) ? element.Parent.Style.Font.Size : 16; // 16 - Document font-size
+
+            if (element.Style.Font != null)
+            {
+                fontSize = element.Style.Font.Size;
+            }
+
+            return fontSize * rule.ComputedValue.Value;
+        }
+
+        /// <summary>
+        //  Calculates x percent of viewport height
+        /// </summary>
+        public static float VhToPx(Rule rule, DOMElement element)
+        {
+            return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Height;
+        }
+
+        /// <summary>
+        //  Calculates x percent of viewport width
+        /// </summary>
+        public static float VwToPx(Rule rule, DOMElement element)
+        {
+            return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Width;
+        }
+
+        /// <summary>
+        /// Calculates pixels from percent
+        /// </summary>
+        public static float PercentToPx(Rule rule, DOMElement element)
+        {
+            if (rule.Property == "width")
+            {
+                float parentWidth = (element.Parent != null) ? element.Parent.ComputedStyle.Size.Width : Program.deviceWidth;
+
+                return (rule.ComputedValue.ValueBeforeComputing / 100) * parentWidth;
+            }
+            else if (rule.Property == "height")
+            {
+                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : 0;
+
+                return (rule.ComputedValue.ValueBeforeComputing / 100) * parentHeight;
+            }
+
+            return 0f;
+        }
     }
 }
