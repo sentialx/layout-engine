@@ -5,12 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace LayoutEngine
-{
-    public class CSS
-    {
-        public static List<RuleSet> Parse (string css)
-        {
+namespace LayoutEngine {
+    public class CSS {
+        public static List<RuleSet> Parse (string css) {
             bool isInBrackets = false;
             bool readingSelector = false;
 
@@ -22,19 +19,14 @@ namespace LayoutEngine
             List<RuleSet> ruleSets = new List<RuleSet>();
 
             // Get selectors and declarations (rules).
-            for (int x = 0; x < css.Length; x++)
-            {
+            for (int x = 0; x < css.Length; x++) {
                 // Get declarations (rules).
-                if (css[x] == '{')
-                {
-                    if (!isInBrackets)
-                    {
+                if (css[x] == '{') {
+                    if (!isInBrackets) {
                         string rulesS = "";
-                        for (int y = x; y < css.Length; y++)
-                        {
+                        for (int y = x; y < css.Length; y++) {
                             if (css[y] == '}') break;
-                            if (css[y] != '{' && css[y] != '\n')
-                            {
+                            if (css[y] != '{' && css[y] != '\n') {
                                 rulesS += css[y];
                             }
                         }
@@ -48,16 +40,12 @@ namespace LayoutEngine
                 }
 
                 // Get selectors.
-                if (css[x] != '{' && css[x] != '}' && css[x] != ' ' && !isInBrackets)
-                {
+                if (css[x] != '{' && css[x] != '}' && css[x] != ' ' && !isInBrackets) {
                     string selector = "";
-                    if (!readingSelector)
-                    {
+                    if (!readingSelector) {
                         readingSelector = true;
-                        for (int y = x; y < css.Length; y++)
-                        {
-                            if (css[y] == '{' || css[y] == ' ')
-                            {
+                        for (int y = x; y < css.Length; y++) {
+                            if (css[y] == '{' || css[y] == ' ') {
                                 break;
                             }
                             selector += css[y];
@@ -66,18 +54,15 @@ namespace LayoutEngine
                     }
                 }
 
-                if (css[x] == '}')
-                {
+                if (css[x] == '}') {
                     isInBrackets = false;
                     readingSelector = false;
                 }
             }
 
             // Create rule sets.
-            for (int x = 0; x < rules.Count; x++)
-            {
-                if (rules[x].Trim() != "")
-                {
+            for (int x = 0; x < rules.Count; x++) {
+                if (rules[x].Trim() != "") {
                     // Create rule set.
                     RuleSet ruleSet = new RuleSet();
                     ruleSet.Selector = selectors[x];
@@ -86,11 +71,9 @@ namespace LayoutEngine
 
                     List<Rule> realRules = new List<Rule>();
 
-                    for (int y = 0; y < rules2.Length; y++)
-                    {
+                    for (int y = 0; y < rules2.Length; y++) {
                         // If rule is valid.
-                        if (rules2[y].Split(':').Length == 2)
-                        {
+                        if (rules2[y].Split(':').Length == 2) {
                             // Get property and value of rule.
                             string name = rules2[y].Split(':')[0].Trim();
                             string value = rules2[y].Split(':')[1].Trim();

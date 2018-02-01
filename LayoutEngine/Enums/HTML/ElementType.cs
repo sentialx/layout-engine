@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum ElementType
-    {
+﻿namespace LayoutEngine {
+    public enum ElementType {
         Text,
         Tag
     }

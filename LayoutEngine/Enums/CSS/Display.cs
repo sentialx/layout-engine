@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum Display
-    {
+﻿namespace LayoutEngine {
+    public enum Display {
         None,
         Block,
         Initial,

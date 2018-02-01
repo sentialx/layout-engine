@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public class HTMLAttribute
-    {
+﻿namespace LayoutEngine {
+    public class HTMLAttribute {
         public string Property = "";
         public string Value = "";
         public int PropertyStartIndex = -1;

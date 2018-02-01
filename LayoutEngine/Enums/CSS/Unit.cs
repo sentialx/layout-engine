@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum Unit
-    {
+﻿namespace LayoutEngine {
+    public enum Unit {
         None,
         Em,      // Relative to the font-size of the element
         Vh,      // Relative to 1% of the height of the viewport

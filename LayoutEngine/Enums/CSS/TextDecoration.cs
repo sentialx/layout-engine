@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum TextDecoration
-    {
+﻿namespace LayoutEngine {
+    public enum TextDecoration {
         None,
         Underline,
         Overline,

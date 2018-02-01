@@ -1,9 +1,7 @@
 ﻿using System.Drawing;
 
-namespace LayoutEngine
-{
-    public class Style
-    {
+namespace LayoutEngine {
+    public class Style {
         public Color Color = Color.Black;
         public Color BackgroundColor = Color.Transparent;
         public Size Size = new Size(-1, -1);

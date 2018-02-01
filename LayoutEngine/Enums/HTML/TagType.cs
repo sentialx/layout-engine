@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum TagType
-    {
+﻿namespace LayoutEngine {
+    public enum TagType {
         Opening,
         Closing,
         SelfClosing

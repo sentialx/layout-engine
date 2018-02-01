@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum DOMElementType
-    {
+﻿namespace LayoutEngine {
+    public enum DOMElementType {
         Text,
         Normal
     }

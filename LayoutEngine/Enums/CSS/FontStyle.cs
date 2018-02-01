@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum FontStyle
-    {
+﻿namespace LayoutEngine {
+    public enum FontStyle {
         Normal,
         Italic,
         Oblique,

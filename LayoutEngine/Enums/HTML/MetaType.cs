@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum MetaType
-    {
+﻿namespace LayoutEngine {
+    public enum MetaType {
         ViewportWidth,
         ViewportHeight
     }

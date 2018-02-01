@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace LayoutEngine
-{
-    public class DOMElement
-    {
+namespace LayoutEngine {
+    public class DOMElement {
         public string Content = "";
         public int Level;
         public List<DOMElement> Children = new List<DOMElement>();

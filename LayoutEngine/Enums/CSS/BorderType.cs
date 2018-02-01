@@ -1,7 +1,5 @@
-﻿namespace LayoutEngine
-{
-    public enum BorderType
-    {
+﻿namespace LayoutEngine {
+    public enum BorderType {
         None,
         Hidden,
         Dotted,

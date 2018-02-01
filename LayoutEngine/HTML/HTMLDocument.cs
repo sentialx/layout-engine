@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LayoutEngine
-{
-    public class HTMLDocument
-    {
+namespace LayoutEngine {
+    public class HTMLDocument {
         public List<DOMElement> Children;
         public List<Meta> MetaTags;
 
-        public Size getViewport ()
-        {
+        public Size getViewport () {
             Size size = new Size(Program.deviceHeight, Program.deviceWidth);
 
-            foreach (Meta meta in MetaTags)
-            {
-                if (meta.Property == MetaType.ViewportWidth)
-                {
+            foreach (Meta meta in MetaTags) {
+                if (meta.Property == MetaType.ViewportWidth) {
                     size.Width = meta.ComputedValue;
-                }
-                else if (meta.Property == MetaType.ViewportHeight)
-                {
+                } else if (meta.Property == MetaType.ViewportHeight) {
                     size.Height = meta.ComputedValue;
                 }
             }

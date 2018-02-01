@@ -5,10 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace LayoutEngine
-{
-    public class CSSUnits
-    {
+namespace LayoutEngine {
+    public class CSSUnits {
         public static List<Unit> allUnits = new List<Unit>()
         {
             Unit.Px,
@@ -23,12 +21,10 @@ namespace LayoutEngine
             Unit.Vw
         };
 
-        public static CSSValue ParseValue (Rule rule, DOMElement element)
-        {
+        public static CSSValue ParseValue (Rule rule, DOMElement element) {
             CSSValue cssValue = new CSSValue();
 
-            if (rule.Value.StartsWith("calc("))
-            {
+            if (rule.Value.StartsWith("calc(")) {
                 cssValue.Unit = Unit.CalcFunc;
                 rule.ComputedValue = cssValue;
 
@@ -36,20 +32,17 @@ namespace LayoutEngine
             } else {
                 List<string> array = Regex.Split(rule.Value, @"[^0-9\.]+").Where(c => c != "." && c.Trim() != "").ToList();
 
-                if (array.Count > 0 && rule.Value.Length > 2)
-                {
+                if (array.Count > 0 && rule.Value.Length > 2) {
                     float value = float.Parse(array[0], CultureInfo.InvariantCulture.NumberFormat);
                     int startIndex = value.ToString().Length;
 
                     string unitType = rule.Value.Substring(startIndex, rule.Value.Length - startIndex).ToLower();
                     cssValue.Value = value;
 
-                    foreach (Unit unit in allUnits)
-                    {
+                    foreach (Unit unit in allUnits) {
                         string abbreviation = GetUnitAbbreviation(unit);
 
-                        if (unitType == abbreviation)
-                        {
+                        if (unitType == abbreviation) {
                             cssValue.Unit = unit;
                         }
                     }
@@ -66,52 +59,33 @@ namespace LayoutEngine
             return null;
         }
 
-        public static float ConvertAnyUnitToPixels (Rule rule, DOMElement element)
-        {
+        public static float ConvertAnyUnitToPixels (Rule rule, DOMElement element) {
             CSSValue cssValue = rule.ComputedValue;
 
-            if (cssValue.Unit == Unit.Px)
-            {
+            if (cssValue.Unit == Unit.Px) {
                 return cssValue.Value;
-            }
-            else if (cssValue.Unit == Unit.Cm)
-            {
+            } else if (cssValue.Unit == Unit.Cm) {
                 return CSSUnitsConverter.CmToPX(cssValue.Value);
-            }
-            else if (cssValue.Unit == Unit.Mm)
-            {
+            } else if (cssValue.Unit == Unit.Mm) {
                 return CSSUnitsConverter.MmToPX(cssValue.Value);
-            }
-            else if (cssValue.Unit == Unit.In)
-            {
+            } else if (cssValue.Unit == Unit.In) {
                 return CSSUnitsConverter.InToPX(cssValue.Value);
-            }
-            else if (cssValue.Unit == Unit.Percent)
-            {
+            } else if (cssValue.Unit == Unit.Percent) {
                 return CSSUnitsConverter.PercentToPx(rule, element);
-            }
-            else if (cssValue.Unit == Unit.Pt)
-            {
+            } else if (cssValue.Unit == Unit.Pt) {
                 return CSSUnitsConverter.PtToPX(cssValue.Value);
-            }
-            else if (cssValue.Unit == Unit.Em)
-            {
+            } else if (cssValue.Unit == Unit.Em) {
                 return CSSUnitsConverter.EmToPx(rule, element);
-            }
-            else if (cssValue.Unit == Unit.Vh)
-            {
+            } else if (cssValue.Unit == Unit.Vh) {
                 return CSSUnitsConverter.VhToPx(rule, element);
-            }
-            else if (cssValue.Unit == Unit.Vw)
-            {
+            } else if (cssValue.Unit == Unit.Vw) {
                 return CSSUnitsConverter.VwToPx(rule, element);
             }
 
             return -1f;
         }
 
-        public static string GetUnitAbbreviation (Unit unit)
-        {
+        public static string GetUnitAbbreviation (Unit unit) {
             if (unit == Unit.Px) return "px";
             else if (unit == Unit.Cm) return "cm";
             else if (unit == Unit.Mm) return "mm";
