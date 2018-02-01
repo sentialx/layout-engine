@@ -477,7 +477,7 @@ namespace LayoutEngine {
 
         // TODO
         private static float ParseMetaViewPort (string content, bool width = true) {
-            return width ? Program.deviceWidth : Program.deviceHeight;
+            return width ? LayoutEngine.htmlDocument.Width : LayoutEngine.htmlDocument.Height;
         }
     }
 }

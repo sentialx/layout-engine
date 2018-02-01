@@ -2,7 +2,6 @@
 
 namespace LayoutEngine {
     public class CSSUnitsConverter {
-
         /// <summary>
         //  Calculates pixels from centimeters
         /// </summary>
@@ -79,14 +78,14 @@ namespace LayoutEngine {
         //  Calculates x percent of viewport height
         /// </summary>
         public static float VhToPx (Rule rule, DOMElement element) {
-            return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Height;
+            return rule.ComputedValue.Value / 100 * LayoutEngine.htmlDocument.getViewport().Height;
         }
 
         /// <summary>
         //  Calculates x percent of viewport width
         /// </summary>
         public static float VwToPx (Rule rule, DOMElement element) {
-            return rule.ComputedValue.Value / 100 * Program.htmlDocument.getViewport().Width;
+            return rule.ComputedValue.Value / 100 * LayoutEngine.htmlDocument.getViewport().Width;
         }
 
         /// <summary>
@@ -94,11 +93,11 @@ namespace LayoutEngine {
         /// </summary>
         public static float PercentToPx (Rule rule, DOMElement element) {
             if (rule.Property == "width") {
-                float parentWidth = (element.Parent != null) ? element.Parent.ComputedStyle.Size.Width : Program.deviceWidth;
+                float parentWidth = (element.Parent != null) ? element.Parent.ComputedStyle.Size.Width : LayoutEngine.htmlDocument.Width;
 
                 return (rule.ComputedValue.ValueBeforeComputing / 100) * parentWidth;
             } else if (rule.Property == "height") {
-                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : Program.deviceHeight;
+                float parentHeight = (element.Parent != null) ? element.Parent.Style.Size.Height : LayoutEngine.htmlDocument.Height;
 
                 return (rule.ComputedValue.ValueBeforeComputing / 100) * parentHeight;
             }
