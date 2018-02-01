@@ -299,21 +299,15 @@ namespace LayoutEngine {
 
         private static void SetSizes (List<DOMElement> elements) {
             foreach (DOMElement element in elements) {
-                if (element.Children.Count > 0) {
-                    SetSizes(element.Children);
-                } else {
-                    element.SetSizes(bmp);
-                }
+                if (element.Children.Count > 0) SetSizes(element.Children);
+                else element.SetSizes(bmp);
             }
         }
 
         private static void SetPercentSizes (List<DOMElement> elements) {
             foreach (DOMElement element in elements) {
-                if (element.Children.Count > 0) {
-                    SetPercentSizes(element.Children);
-                } else {
-                    element.SetPercentSizes();
-                }
+                element.SetPercentSizes();
+                if (element.Children.Count > 0) SetPercentSizes(element.Children);
             }
         }
 

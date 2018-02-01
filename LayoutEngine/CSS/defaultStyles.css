@@ -234,15 +234,3 @@ td {
 meta {
     display: none;
 }
-
-testa {
-    width: 256px;
-    height: 256px;
-    background-color: lime;
-}
-
-testb {
-    width: calc(100% - 32px);
-    height: 128px;
-    background-color: black;
-}
