@@ -1,5 +1,5 @@
 # layout-engine
-A simple layout engine written in C# (it will be ported to C++).
+A simple layout engine that renders HTML and CSS which is written in C#.
 
 # Testing
 To test it out if it works, simply create an index.html in Debug folder and styles.css in Debug/CSS folder, and you can code.
