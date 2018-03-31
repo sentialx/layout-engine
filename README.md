@@ -1,9 +1,37 @@
 # layout-engine
-A simple layout engine that renders HTML and CSS which is written in C#.
+A simple layout engine that renders HTML and CSS.
 
 # Testing
-To test it out if it works, simply create an index.html in Debug folder and styles.css in Debug/CSS folder, and you can code.
-For this moment only valid HTML works, so please don't test invalid HTML code. In CSS you can use only hex colors.
-The `padding` rule doesn't work. You can use only `padding-left`, `padding-top`, `padding-right` and `padding-bottom`. The same as `margin`.
-For borders you can use only this scheme:
-`border: {width} solid {color}`.
+To test it out, simply create an `index.html` file in `layout-engine/bin/Debug` folder and `styles.css` in `layout-engine/bin/Debug/CSS` folder.
+
+## Limitations
+* Only valid HTML code works. 
+
+  Bad:
+  ```html
+  <html>
+    <body>
+      <div>
+        <div>
+          Test
+    </body>
+  </html>
+  
+  ```
+  Good:
+  ```html
+  <html>
+    <body>
+      <div>
+        <div>
+          Test
+        </div>
+      </div>
+    </body>
+  </html>
+  ```
+  
+* In CSS only hex colors are accepted.
+* The `padding` rule doesn't work. Instead use `padding-left`, `padding-top` etc. The same as `margin`.
+* For borders you can use only `border: {width} solid {color}`.
+* Not all units work.
